@@ -1,16 +1,19 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { SERVICES } from "../constants/constants";
+import Link from "next/link";
 
 const ServiceStack = ({
   title,
   description,
   price,
   priceText,
+  href
 }: {
   title: string;
   description: string;
   price: string;
   priceText: string;
+  href: string;
 }) => {
   return (
     <Box
@@ -57,15 +60,18 @@ const ServiceStack = ({
           {priceText}
         </Typography>
       </Box>
-      <Button
-        style={{
-          backgroundColor: "var(--color-text-primary)",
-          color: "var(--color-background)",
-          flex: 0.2,
-        }}
+      <Link
+        style={{ flex: 0.2, backgroundColor: "var(--color-text-primary)" }}
+        href={href}
       >
-        Book Now
-      </Button>
+        <Button
+          style={{
+            color: "var(--color-background)",
+          }}
+        >
+          Book Now
+        </Button>
+      </Link>
     </Box>
   );
 };
@@ -127,6 +133,7 @@ export default function Services() {
               description={service.description}
               price={service.price}
               priceText={service.priceText}
+              href={service.href}
             />
           ))}
           <hr />

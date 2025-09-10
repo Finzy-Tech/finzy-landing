@@ -44,6 +44,7 @@ const SERVICES = [
       "Four Months Plan",
     price: "$99",
     priceText: "Not Available",
+    href: "/services/personal-finance"
   },
   {
     title: "Investment Planning",
@@ -51,6 +52,7 @@ const SERVICES = [
       "One Year Plan",
     price: "$199",
     priceText: "Available",
+    href: "/services/investment"
   },
   {
     title: "Retirement Planning",
@@ -58,6 +60,7 @@ const SERVICES = [
       "Three Sessions plan",
     price: "$299",
     priceText: "Not Available",
+    href: "/services/retirement"
   },
 ];
 
