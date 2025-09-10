@@ -5,6 +5,7 @@ import FacebookIcon from '@mui/icons-material/Facebook';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Link from "next/link";
 
 type Props = {};
 
@@ -43,10 +44,10 @@ const Navbar = (props: Props) => {
         <Box sx={{ display: "flex", gap: "20px" }}>
           <Box sx={{ display: "flex", gap: "20px" }}>
           {NAVBAR_LINKS.map((link) => (
-            <Box key={link.label}>
-              <Typography sx={{ color: "var(--color-text-primary)" }}>
+            <Box sx={{cursor: "pointer"}} key={link.label}>
+              <Link href={link.path} style={{ textDecoration: 'none', fontFamily: 'var(--font-family-primary)', color: 'var(--color-text-primary)' }}>
                 {link.label}
-              </Typography>
+              </Link>
             </Box>
           ))}
           </Box>
