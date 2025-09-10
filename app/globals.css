@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'PlayfairDisplay', sans-serif;
+  src: url('/fonts/PlayfairDisplay-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'PlayfairDisplayBold', sans-serif;
+  src: url('/fonts/PlayfairDisplay-Bold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'PlayfairDisplaySemiBold', sans-serif;
+  src: url('/fonts/PlayfairDisplay-SemiBold.ttf') format('truetype');
+}
+
+body {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* Internet Explorer and Edge */
+}
+
+:root {
+  --color-text-primary: #0C4139;
+  --color-text-secondary: rgb(246, 204, 119);
+  --color-primary: #1976d2;
+  --color-secondary: #dc004e;
+  --color-background: rgba(249, 249, 241);
+  --color-background-secondary: rgb(246, 204, 119);
+  --font-family-primary: 'PlayfairDisplay', serif;
+  --font-family-bold: 'PlayfairDisplayBold', serif;
+  --font-family-semi-bold: 'PlayfairDisplaySemiBold', serif;
+}
+
+.MuiTypography-root {
+  font-family: 'PlayfairDisplay', serif !important;
+}
+
+.phoneInput input:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: transparent;
+}
