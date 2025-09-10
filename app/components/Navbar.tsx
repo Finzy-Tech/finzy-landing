@@ -59,10 +59,12 @@ const Navbar = (props: Props) => {
             <FacebookIcon sx={{ color: "var(--color-text-primary)" }} />
             <InstagramIcon sx={{ color: "var(--color-text-primary)" }} />
             <LinkedInIcon sx={{ color: "var(--color-text-primary)" }} />
-            <Typography sx={{ color: "var(--color-text-primary)", display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
-              <AccountCircleIcon />
-              Log In
-            </Typography>
+            <Link href="/page/login" style={{ textDecoration: 'none' }}>
+              <Typography sx={{ color: "var(--color-text-primary)", display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer' }}>
+                <AccountCircleIcon />
+                Log In
+              </Typography>
+            </Link>
           </Box>
 
         </Box>
