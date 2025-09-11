@@ -61,8 +61,8 @@ const RegisterPage: React.FC = () => {
     if (cloudinaryRef.current) {
       widgetRef.current = cloudinaryRef.current.createUploadWidget(
         {
-          cloudName: "YOUR_CLOUD_NAME", // Replace with your Cloudinary cloud name
-          uploadPreset: "YOUR_UPLOAD_PRESET", // Replace with your unsigned upload preset name
+          cloudName: process.env.CLOUDINARY_CLOUD_NAME, // Replace with your Cloudinary cloud name
+          uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET, // Replace with your unsigned upload preset name
         },
         function (error: unknown, result: any) {
           if (!error && result && result.event === "success") {
