@@ -14,6 +14,8 @@ import {
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Toaster, toast } from "react-hot-toast";
 
 type Props = {};
 
@@ -40,6 +42,8 @@ const StyledTextField = styled(TextField)({
 
 const Login = (props: Props) => {
   const [form, setForm] = React.useState({ email: "", password: "" });
+
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -100,11 +104,15 @@ const Login = (props: Props) => {
                 redirect: false,
               }).then((callback) => {
                 if (callback?.error) {
-                  console.log("checking error", callback.error);
+                  console.log("checking error", callback);
+                  toast.error("Invalid credentials");
+                  return;
                 }
 
                 if (callback?.ok) {
                   console.log("login successful", callback);
+                  toast.success("Login successful");
+                  router.push("/");
                 }
               })
             }
@@ -120,7 +128,7 @@ const Login = (props: Props) => {
               borderColor: "var(--color-text-primary)",
               fontFamily: "var(--font-family-primary)",
             }}
-            onClick={() => signIn("google")}
+            onClick={() => signIn("google", { callbackUrl: "/" })}
           >
             Login with Google
           </Button>
@@ -141,6 +149,7 @@ const Login = (props: Props) => {
           </Typography>
         </Stack>
       </Paper>
+      <Toaster position="top-right" />
     </Box>
   );
 };
