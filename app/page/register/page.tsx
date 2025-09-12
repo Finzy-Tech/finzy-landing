@@ -19,7 +19,10 @@ import {
   Link,
   Grid,
   styled,
+  Select,
+  MenuItem,
 } from "@mui/material";
+import axiosInstance from "@/app/utils/axios";
 
 const StyledTextField = styled(TextField)({
   "& .MuiInputBase-input, & .MuiInputLabel-root": {
@@ -49,7 +52,8 @@ const RegisterPage: React.FC = () => {
     password: "",
     confirmPassword: "",
     age: "",
-    profilePicture: null as File | null,
+    gender: "",
+    profilePicture: "",
   });
   const [error, setError] = useState<string>("");
 
@@ -57,24 +61,27 @@ const RegisterPage: React.FC = () => {
   const widgetRef = useRef<any>(null);
 
   useEffect(() => {
-    cloudinaryRef.current = window.cloudinary;
-    if (cloudinaryRef.current) {
-      widgetRef.current = cloudinaryRef.current.createUploadWidget(
-        {
-          cloudName: process.env.CLOUDINARY_CLOUD_NAME, // Replace with your Cloudinary cloud name
-          uploadPreset: process.env.CLOUDINARY_UPLOAD_PRESET, // Replace with your unsigned upload preset name
-        },
-        function (error: unknown, result: any) {
-          if (!error && result && result.event === "success") {
-            // You can now use result.info.secure_url to display or store the image
-            setForm((prev) => ({
-              ...prev,
-              profilePicture: result.info.secure_url,
-            }));
-          }
-        }
-      );
+    if (!(window as any).cloudinary) {
+      console.log("Cloudinary script not loaded!");
+      return;
     }
+
+    cloudinaryRef.current = (window as any).cloudinary;
+    widgetRef.current = cloudinaryRef.current.createUploadWidget(
+      {
+        cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+        uploadPreset: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+      },
+      (error: unknown, result: any) => {
+        if (error) console.log("Cloudinary widget error:", error);
+        if (result?.event === "success") {
+          setForm((prev) => ({
+            ...prev,
+            profilePicture: result.info.secure_url,
+          }));
+        }
+      }
+    );
   }, []);
 
   const openWidget = (e: React.MouseEvent) => {
@@ -83,18 +90,11 @@ const RegisterPage: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = e.target;
-    if (name === "profilePicture" && files) {
-      setForm((prev) => ({
-        ...prev,
-        profilePicture: files[0],
-      }));
-    } else {
-      setForm((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -105,6 +105,7 @@ const RegisterPage: React.FC = () => {
       !form.email ||
       !form.password ||
       !form.confirmPassword ||
+      !form.gender ||
       !form.age
     ) {
       setError("Please fill all fields.");
@@ -115,7 +116,14 @@ const RegisterPage: React.FC = () => {
       return;
     }
     // Registration logic here (API call, etc.)
-    alert("Registered successfully!");
+    axiosInstance.post("/people/register", form)
+      .then(response => {
+        console.log("Registration successful:", response.data);
+      })
+      .catch(error => {
+        setError("Registration failed.");
+        console.error("Registration error:", error);
+      });
   };
 
   return (
@@ -137,7 +145,7 @@ const RegisterPage: React.FC = () => {
           borderRadius: 2,
           boxShadow: 3,
           minWidth: 350,
-            maxWidth: 500,
+          maxWidth: 500,
         }}
       >
         <Typography
@@ -151,7 +159,7 @@ const RegisterPage: React.FC = () => {
           Register
         </Typography>
         <Grid container spacing={2}>
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 6 }}>
             <StyledTextField
               label="Name"
               name="name"
@@ -160,7 +168,7 @@ const RegisterPage: React.FC = () => {
               fullWidth
             />
           </Grid>
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 6 }}>
             <StyledTextField
               label="Email"
               name="email"
@@ -190,7 +198,7 @@ const RegisterPage: React.FC = () => {
               fullWidth
             />
           </Grid>
-          <Grid size={{ xs: 12 }}>
+          <Grid size={{ xs: 6 }}>
             <StyledTextField
               label="Age"
               name="age"
@@ -200,20 +208,59 @@ const RegisterPage: React.FC = () => {
               fullWidth
             />
           </Grid>
+          <Grid size={{ xs: 6 }}>
+            <Select
+              labelId="gender"
+              id="gender"
+              value={form.gender}
+              label="Gender"
+              name="gender"
+              onChange={(e) => handleChange(e as any)}
+              sx={{width: "100%"}}
+            >
+              <MenuItem value={"male"}>Male</MenuItem>
+              <MenuItem value={"female"}>Female</MenuItem>
+            </Select>
+          </Grid>
           <Grid size={{ xs: 12 }}>
-            <FormControl fullWidth>
-              <InputLabel
-                shrink
-                htmlFor="profilePicture"
-                sx={{ color: "var(--color-text-primary)" }}
-              >
-                Profile Picture
-              </InputLabel>
+            <InputLabel
+              htmlFor="profilePicture"
+              sx={{ color: "var(--color-text-primary)" }}
+            >
+              Profile Picture
+            </InputLabel>
+
+            {form.profilePicture && typeof form.profilePicture === "string" ? (
+              <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                <Avatar
+                  src={form.profilePicture}
+                  sx={{ width: 56, height: 56, mt: 2 }}
+                />
+                <Button
+                  variant="outlined"
+                  onClick={openWidget}
+                  sx={{
+                    mt: 1,
+                    color: "var(--color-text-primary)",
+                    borderColor: "var(--color-text-primary)",
+                    fontFamily: "var(--font-family-primary)",
+                    height: "fit-content",
+                    "&:hover": {
+                      borderColor: "var(--color-text-primary)",
+                      background: "rgba(0,0,0,0.03)",
+                    },
+                  }}
+                >
+                  Upload Image
+                </Button>
+              </Box>
+            ) : (
               <Button
                 variant="outlined"
                 onClick={openWidget}
                 sx={{
                   mt: 1,
+                  width: "100%",
                   color: "var(--color-text-primary)",
                   borderColor: "var(--color-text-primary)",
                   fontFamily: "var(--font-family-primary)",
@@ -225,14 +272,7 @@ const RegisterPage: React.FC = () => {
               >
                 Upload Image
               </Button>
-              {form.profilePicture &&
-                typeof form.profilePicture === "string" && (
-                  <Avatar
-                    src={form.profilePicture}
-                    sx={{ width: 56, height: 56, mt: 2 }}
-                  />
-                )}
-            </FormControl>
+            )}
           </Grid>
         </Grid>
         {error && (

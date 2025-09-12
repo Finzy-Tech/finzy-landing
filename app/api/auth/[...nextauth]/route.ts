@@ -29,7 +29,7 @@ export const authOptions: AuthOptions = {
         }
 
         // Call your backend API for validation
-        const res = await fetch(`${process.env.BACKEND_URL}/auth/login`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(credentials),
@@ -67,7 +67,7 @@ export const authOptions: AuthOptions = {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         // Check if the user exists in backend
-        const res = await fetch(`${process.env.BACKEND_URL}/auth/check-user`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check-user`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: user.email }),
