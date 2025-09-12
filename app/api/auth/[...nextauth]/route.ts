@@ -1,3 +1,4 @@
+import axiosInstance from "@/app/utils/axios";
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
@@ -12,8 +13,7 @@ export const authOptions: AuthOptions = {
           id: profile.sub,
           name: profile.name,
           email: profile.email,
-          image: profile.picture,
-          isOnboarded: false, // custom field to check onboarding
+          image: profile.picture
         };
       },
     }),
@@ -29,14 +29,10 @@ export const authOptions: AuthOptions = {
         }
 
         // Call your backend API for validation
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(credentials),
-        });
+        const res = await axiosInstance.post(`/people/login`, credentials);
 
-        if (!res.ok) return null;
-        const user = await res.json();
+        if (!res.data.success) return null;
+        const user = await res.data.user;
 
         return user || null;
       },
@@ -47,42 +43,6 @@ export const authOptions: AuthOptions = {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
-
-  callbacks: {
-    async jwt({ token, user, account, profile }) {
-      if (user) {
-        // Store onboarding state in the JWT
-        token.isOnboarded = user.isOnboarded ?? false;
-      }
-      return token;
-    },
-
-    async session({ session, token }) {
-      if (token) {
-        session.user.isOnboarded = token.isOnboarded;
-      }
-      return session;
-    },
-
-    async signIn({ user, account }) {
-      if (account?.provider === "google") {
-        // Check if the user exists in backend
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/check-user`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: user.email }),
-        });
-
-        const data = await res.json();
-
-        if (!data.exists) {
-          // New Google user → let them onboard first
-          return "/onboarding"; // redirect to onboarding page
-        }
-      }
-      return true;
-    },
-  },
 };
 
 const handler = NextAuth(authOptions);
