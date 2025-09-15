@@ -27,18 +27,19 @@ import {
   TextField,
 } from "@mui/material";
 import { PieChart, Pie, Cell, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import { useRouter } from "next/navigation";
 
 // Dummy data
 const isPortfolioEmpty = false;
 const riskProfileExists = true;
 const recommendations = [
-  { name: "Finzy Growth Fund", category: "Equity", risk: "Moderate", nav: 120 },
-  { name: "Finzy Secure Fund", category: "Debt", risk: "Low", nav: 105 },
-  { name: "Finzy Balanced Fund", category: "Hybrid", risk: "Moderate", nav: 110 },
+  { name: "Finzy Growth Fund", category: "Equity", risk: "Moderate", nav: 120, id: 12340 },
+  { name: "Finzy Secure Fund", category: "Debt", risk: "Low", nav: 105, id: 12341 },
+  { name: "Finzy Balanced Fund", category: "Hybrid", risk: "Moderate", nav: 110, id: 12342 },
 ];
 const holdings = [
-  { fundName: "Finzy Growth Fund", category: "Equity", invested: 10000, nav: 120, units: 83.33 },
-  { fundName: "Finzy Secure Fund", category: "Debt", invested: 5000, nav: 105, units: 47.62 },
+  { fundName: "Finzy Growth Fund", category: "Equity", invested: 10000, nav: 120, units: 83.33, id: 12340 },
+  { fundName: "Finzy Secure Fund", category: "Debt", invested: 5000, nav: 105, units: 47.62, id: 12341 },
 ];
 const portfolioValue = holdings.reduce((acc, h) => acc + h.units * h.nav, 0);
 const investedAmount = holdings.reduce((acc, h) => acc + h.invested, 0);
@@ -66,6 +67,8 @@ export default function InvestmentPage() {
   const [sipAmount, setSipAmount] = useState(1000);
   const [sipDuration, setSipDuration] = useState(12);
   const [sipReturnRate, setSipReturnRate] = useState(12);
+
+  const router = useRouter();
 
   // Filtered recommended funds
   const filteredFunds =
@@ -102,7 +105,7 @@ export default function InvestmentPage() {
                     primary={rec.name}
                     secondary={`Category: ${rec.category} | Risk: ${rec.risk} | NAV: ₹${rec.nav}`}
                   />
-                  <Button variant="contained">Start SIP</Button>
+                  <Button variant="contained" onClick={() => router.push(`/services/investment/${rec.id}`)}>Start SIP</Button>
                 </ListItem>
               ))}
             </List>
@@ -199,7 +202,7 @@ export default function InvestmentPage() {
               <TableBody>
                 {holdings.map((h, idx) => (
                   <TableRow key={idx}>
-                    <TableCell>{h.fundName}</TableCell>
+                    <TableCell sx={{cursor: "pointer"}} onClick={() => router.push(`/services/investment/${h.id}`)}>{h.fundName}</TableCell>
                     <TableCell>{h.category}</TableCell>
                     <TableCell>₹{h.invested.toLocaleString()}</TableCell>
                     <TableCell>{h.nav}</TableCell>
