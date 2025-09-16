@@ -30,13 +30,13 @@ import { useRouter } from "next/navigation";
 const isPortfolioEmpty = false;
 const riskProfileExists = true;
 const recommendations = [
-  { name: "Finzy Growth Fund", category: "Equity", risk: "Moderate", nav: 120, id: 12340 },
-  { name: "Finzy Secure Fund", category: "Debt", risk: "Low", nav: 105, id: 12341 },
-  { name: "Finzy Balanced Fund", category: "Hybrid", risk: "Moderate", nav: 110, id: 12342 },
+  { name: "Finzy Growth Fund", category: "Equity", risk: "Moderate", fiveYearReturn: 12, nav: 120, id: 12340 },
+  { name: "Finzy Secure Fund", category: "Debt", risk: "Low", fiveYearReturn: 8, nav: 105, id: 12341 },
+  { name: "Finzy Balanced Fund", category: "Hybrid", risk: "Moderate", fiveYearReturn: 10, nav: 110, id: 12342 },
 ];
 const holdings = [
-  { fundName: "Finzy Growth Fund", category: "Equity", invested: 10000, nav: 120, units: 83.33, id: 12340 },
-  { fundName: "Finzy Secure Fund", category: "Debt", invested: 5000, nav: 105, units: 47.62, id: 12341 },
+  { fundName: "Finzy Growth Fund", category: "Equity", fiveYearReturn: 12, invested: 10000, nav: 120, units: 83.33, id: 12340 },
+  { fundName: "Finzy Secure Fund", category: "Debt", fiveYearReturn: 8, invested: 5000, nav: 105, units: 47.62, id: 12341 },
 ];
 const portfolioValue = holdings.reduce((acc, h) => acc + h.units * h.nav, 0);
 const investedAmount = holdings.reduce((acc, h) => acc + h.invested, 0);
@@ -85,7 +85,7 @@ export default function InvestmentPage() {
                 <ListItem key={idx} divider>
                   <ListItemText
                     primary={rec.name}
-                    secondary={`Category: ${rec.category} | Risk: ${rec.risk} | NAV: ₹${rec.nav}`}
+                    secondary={`Category: ${rec.category} | Risk: ${rec.risk} | 5Y Return: ${rec.fiveYearReturn}% | NAV: ₹${rec.nav}`}
                   />
                   <Button variant="contained" onClick={() => router.push(`/services/investment/${rec.id}`)}>Start SIP</Button>
                 </ListItem>
@@ -157,6 +157,7 @@ export default function InvestmentPage() {
                   <TableCell>Fund Name</TableCell>
                   <TableCell>Category</TableCell>
                   <TableCell>Invested Amount</TableCell>
+                  <TableCell>5Y Return</TableCell>
                   <TableCell>Current NAV</TableCell>
                   <TableCell>Units</TableCell>
                 </TableRow>
@@ -167,6 +168,7 @@ export default function InvestmentPage() {
                     <TableCell sx={{cursor: "pointer"}} onClick={() => router.push(`/services/investment/${h.id}`)}>{h.fundName}</TableCell>
                     <TableCell>{h.category}</TableCell>
                     <TableCell>₹{h.invested.toLocaleString()}</TableCell>
+                    <TableCell>{h.fiveYearReturn}%</TableCell>
                     <TableCell>{h.nav}</TableCell>
                     <TableCell>{h.units.toFixed(2)}</TableCell>
                   </TableRow>
