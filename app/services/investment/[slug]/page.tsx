@@ -202,7 +202,7 @@ export default function Page({
           <Image src="/mf.jpg" alt="Fund Image" width={100} height={100} />
           <Box>
             <Typography variant="h4" gutterBottom>
-              Finzy Growth Fund
+              Motilal Oswal Midcap Fund
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Chip
