@@ -30,12 +30,12 @@ import { useRouter } from "next/navigation";
 const isPortfolioEmpty = false;
 const riskProfileExists = true;
 const recommendations = [
-  { name: "Finzy Growth Fund", category: "Equity", risk: "Moderate", fiveYearReturn: 12, nav: 120, id: 12340 },
+  { name: "Motilal Oswal Midcap Fund", category: "Equity", risk: "Moderate", fiveYearReturn: 12, nav: 120, id: 12340 },
   { name: "Finzy Secure Fund", category: "Debt", risk: "Low", fiveYearReturn: 8, nav: 105, id: 12341 },
   { name: "Finzy Balanced Fund", category: "Hybrid", risk: "Moderate", fiveYearReturn: 10, nav: 110, id: 12342 },
 ];
 const holdings = [
-  { fundName: "Finzy Growth Fund", category: "Equity", fiveYearReturn: 12, invested: 10000, nav: 120, units: 83.33, id: 12340 },
+  { fundName: "Motilal Oswal Midcap Fund", category: "Equity", fiveYearReturn: 12, invested: 10000, nav: 120, units: 83.33, id: 12340 },
   { fundName: "Finzy Secure Fund", category: "Debt", fiveYearReturn: 8, invested: 5000, nav: 105, units: 47.62, id: 12341 },
 ];
 const portfolioValue = holdings.reduce((acc, h) => acc + h.units * h.nav, 0);
