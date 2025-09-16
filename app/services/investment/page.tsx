@@ -10,7 +10,6 @@ import {
   List,
   ListItem,
   ListItemText,
-  Divider,
   Chip,
   Grid,
   Table,
@@ -22,36 +21,26 @@ import {
   Paper,
   MenuItem,
   Select,
-  FormControl,
   InputLabel,
-  TextField,
 } from "@mui/material";
-import { PieChart, Pie, Cell, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
+import { Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 import { useRouter } from "next/navigation";
 
 // Dummy data
 const isPortfolioEmpty = false;
 const riskProfileExists = true;
 const recommendations = [
-  { name: "Finzy Growth Fund", category: "Equity", risk: "Moderate", nav: 120, id: 12340 },
-  { name: "Finzy Secure Fund", category: "Debt", risk: "Low", nav: 105, id: 12341 },
-  { name: "Finzy Balanced Fund", category: "Hybrid", risk: "Moderate", nav: 110, id: 12342 },
+  { name: "Finzy Growth Fund", category: "Equity", risk: "Moderate", fiveYearReturn: 12, nav: 120, id: 12340 },
+  { name: "Finzy Secure Fund", category: "Debt", risk: "Low", fiveYearReturn: 8, nav: 105, id: 12341 },
+  { name: "Finzy Balanced Fund", category: "Hybrid", risk: "Moderate", fiveYearReturn: 10, nav: 110, id: 12342 },
 ];
 const holdings = [
-  { fundName: "Finzy Growth Fund", category: "Equity", invested: 10000, nav: 120, units: 83.33, id: 12340 },
-  { fundName: "Finzy Secure Fund", category: "Debt", invested: 5000, nav: 105, units: 47.62, id: 12341 },
+  { fundName: "Finzy Growth Fund", category: "Equity", fiveYearReturn: 12, invested: 10000, nav: 120, units: 83.33, id: 12340 },
+  { fundName: "Finzy Secure Fund", category: "Debt", fiveYearReturn: 8, invested: 5000, nav: 105, units: 47.62, id: 12341 },
 ];
 const portfolioValue = holdings.reduce((acc, h) => acc + h.units * h.nav, 0);
 const investedAmount = holdings.reduce((acc, h) => acc + h.invested, 0);
 const simpleReturn = (((portfolioValue - investedAmount) / investedAmount) * 100).toFixed(2);
-
-const sips = [
-  { fund: "Finzy Growth Fund", frequency: "Monthly", nextDue: "2025-09-15", status: "Active" },
-  { fund: "Finzy Secure Fund", frequency: "Weekly", nextDue: "2025-09-12", status: "Paused" },
-];
-
-// Colors for pie chart
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 // Dummy line chart data for portfolio performance
 const lineData = [
@@ -64,19 +53,12 @@ const lineData = [
 
 export default function InvestmentPage() {
   const [fundFilter, setFundFilter] = useState("All");
-  const [sipAmount, setSipAmount] = useState(1000);
-  const [sipDuration, setSipDuration] = useState(12);
-  const [sipReturnRate, setSipReturnRate] = useState(12);
 
   const router = useRouter();
 
   // Filtered recommended funds
   const filteredFunds =
     fundFilter === "All" ? recommendations : recommendations.filter((f) => f.category === fundFilter);
-
-  // SIP Calculator
-  const monthlyRate = sipReturnRate / 12 / 100;
-  const futureValue = sipAmount * ((Math.pow(1 + monthlyRate, sipDuration) - 1) / monthlyRate) * (1 + monthlyRate);
 
   return (
     <Box sx={{ p: 4 }}>
@@ -103,7 +85,7 @@ export default function InvestmentPage() {
                 <ListItem key={idx} divider>
                   <ListItemText
                     primary={rec.name}
-                    secondary={`Category: ${rec.category} | Risk: ${rec.risk} | NAV: ₹${rec.nav}`}
+                    secondary={`Category: ${rec.category} | Risk: ${rec.risk} | 5Y Return: ${rec.fiveYearReturn}% | NAV: ₹${rec.nav}`}
                   />
                   <Button variant="contained" onClick={() => router.push(`/services/investment/${rec.id}`)}>Start SIP</Button>
                 </ListItem>
@@ -151,26 +133,6 @@ export default function InvestmentPage() {
                 </Grid>
               </Grid>
 
-              {/* Pie Chart for Allocation */}
-              <ResponsiveContainer width="100%" height={200}>
-                <PieChart>
-                  <Pie
-                    data={holdings.map((h) => ({ name: h.fundName, value: h.units * h.nav }))}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    label
-                  >
-                    {holdings.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-
               {/* Line Chart for Performance */}
               <Typography variant="subtitle1" gutterBottom>
                 Portfolio Performance
@@ -195,6 +157,7 @@ export default function InvestmentPage() {
                   <TableCell>Fund Name</TableCell>
                   <TableCell>Category</TableCell>
                   <TableCell>Invested Amount</TableCell>
+                  <TableCell>5Y Return</TableCell>
                   <TableCell>Current NAV</TableCell>
                   <TableCell>Units</TableCell>
                 </TableRow>
@@ -205,6 +168,7 @@ export default function InvestmentPage() {
                     <TableCell sx={{cursor: "pointer"}} onClick={() => router.push(`/services/investment/${h.id}`)}>{h.fundName}</TableCell>
                     <TableCell>{h.category}</TableCell>
                     <TableCell>₹{h.invested.toLocaleString()}</TableCell>
+                    <TableCell>{h.fiveYearReturn}%</TableCell>
                     <TableCell>{h.nav}</TableCell>
                     <TableCell>{h.units.toFixed(2)}</TableCell>
                   </TableRow>
@@ -213,87 +177,7 @@ export default function InvestmentPage() {
             </Table>
           </TableContainer>
 
-          {/* SIP Status */}
-          <Card sx={{ mb: 4 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                SIP Status
-              </Typography>
-              <List>
-                {sips.map((sip, idx) => (
-                  <React.Fragment key={idx}>
-                    <ListItem>
-                      <ListItemText
-                        primary={sip.fund}
-                        secondary={
-                          <>
-                            <Typography component="span" variant="body2">
-                              Frequency: {sip.frequency} | Next Due: {sip.nextDue}
-                            </Typography>
-                            <br />
-                            <Chip
-                              label={sip.status}
-                              color={
-                                sip.status === "Active"
-                                  ? "success"
-                                  : sip.status === "Paused"
-                                  ? "warning"
-                                  : "default"
-                              }
-                              size="small"
-                              sx={{ mt: 1 }}
-                            />
-                          </>
-                        }
-                      />
-                    </ListItem>
-                    {idx < sips.length - 1 && <Divider />}
-                  </React.Fragment>
-                ))}
-              </List>
-            </CardContent>
-          </Card>
 
-          {/* SIP Calculator */}
-          <Card sx={{ mb: 4 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                SIP Calculator
-              </Typography>
-              <Grid container spacing={2} sx={{ mb: 2 }}>
-                <Grid size={12}>
-                  <TextField
-                    label="Monthly SIP Amount"
-                    type="number"
-                    fullWidth
-                    value={sipAmount}
-                    onChange={(e) => setSipAmount(Number(e.target.value))}
-                  />
-                </Grid>
-                <Grid size={12}>
-                  <TextField
-                    label="Duration (months)"
-                    type="number"
-                    fullWidth
-                    value={sipDuration}
-                    onChange={(e) => setSipDuration(Number(e.target.value))}
-                  />
-                </Grid>
-                <Grid size={12}>
-                  <TextField
-                    label="Expected Annual Return (%)"
-                    type="number"
-                    fullWidth
-                    value={sipReturnRate}
-                    onChange={(e) => setSipReturnRate(Number(e.target.value))}
-                  />
-                </Grid>
-              </Grid>
-              <Typography>
-                Future Value: <b>₹{futureValue.toFixed(2)}</b>
-              </Typography>
-            </CardContent>
-          </Card>
         </Box>
       )}
     </Box>
