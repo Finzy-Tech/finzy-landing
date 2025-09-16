@@ -16,6 +16,14 @@ import {
   Slider,
   Tabs,
   Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Link,
+  IconButton,
 } from "@mui/material";
 import { use } from "react";
 import Image from "next/image";
@@ -24,6 +32,8 @@ import StarIcon from "@mui/icons-material/Star";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SpeedIcon from "@mui/icons-material/Speed";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function Page({
   params,
@@ -42,21 +52,6 @@ export default function Page({
     sipAmount *
     ((Math.pow(1 + monthlyRate, sipDuration) - 1) / monthlyRate) *
     (1 + monthlyRate);
-
-  const sips = [
-    {
-      fund: "Finzy Growth Fund",
-      frequency: "Monthly",
-      nextDue: "2025-09-15",
-      status: "Active",
-    },
-    {
-      fund: "Finzy Secure Fund",
-      frequency: "Weekly",
-      nextDue: "2025-09-12",
-      status: "Paused",
-    },
-  ];
 
   // Dummy bar chart data
   const chartData = [
@@ -79,6 +74,84 @@ export default function Page({
   const corpus = 4221000; // ₹42.21 L
   const profit = corpus - totalInvestment;
   const absReturn = ((corpus / totalInvestment - 1) * 100).toFixed(2);
+
+  // Trailing returns data
+  const trailingReturns = [
+    { period: "1 Month", fund: "2.18%", avg: "1.5%" },
+    { period: "3 Months", fund: "4.11%", avg: "2.05%" },
+    { period: "6 Months", fund: "18.32%", avg: "20.13%" },
+    { period: "1 Year", fund: "-0.26%", avg: "-1.01%" },
+    { period: "2 Years", fund: "29.65%", avg: "22.15%" },
+    { period: "3 Years", fund: "28.02%", avg: "22.08%" },
+    { period: "4 Years", fund: "27.07%", avg: "17.68%" },
+    { period: "5 Years", fund: "34.13%", avg: "26.53%" },
+    { period: "7 Years", fund: "23.28%", avg: "19.36%" },
+    { period: "10 Years", fund: "19.55%", avg: "17.69%" },
+  ];
+
+  const assetAllocation = [
+    { name: "Large Cap", value: 21.37, color: "#6fdbe8" },
+    { name: "Mid Cap", value: 76.02, color: "#ff9c92" },
+    { name: "Small Cap", value: 0, color: "#ffd580" },
+    { name: "Other Cap", value: 0, color: "#bdbdbd" },
+  ];
+
+  const topHoldings = [
+    { name: "Dixon Technologies (India) Ltd.", value: 10.08, color: "#a084e8" },
+    { name: "Coforge Ltd.", value: 9.79, color: "#ff6b6b" },
+    { name: "Trent Ltd.", value: 9.14, color: "#6fdbe8" },
+    { name: "Eternal Ltd.", value: 9.03, color: "#6fdbe8" },
+  ];
+
+  const topSectors = [
+    { name: "Services", value: 26.86, color: "#a084e8" },
+    { name: "Capital Goods", value: 24.97, color: "#ff6b6b" },
+    { name: "Technology", value: 19.21, color: "#6fdbe8" },
+    { name: "Consumer Discretionary", value: 8.7, color: "#6fdbe8" },
+  ];
+
+  const peerFunds = [
+    "Motilal Oswal Midcap Fund",
+    "Nippon India Growth Mid Cap Fund",
+    "HDFC Mid Cap Fund",
+    "Kotak Midcap Fund",
+    "Edelweiss Mid Cap Fund",
+  ];
+
+  const riskRatios = [
+    {
+      label: "Alpha",
+      value: "7.88 vs. 5.57",
+      desc: "Higher outperformance against benchmark",
+      color: "success.main",
+    },
+    {
+      label: "Sharpe",
+      value: "1.18 vs. 5.89",
+      desc: "Poor risk-adjusted returns",
+      color: "error.main",
+    },
+    {
+      label: "Beta",
+      value: "0.89 vs. 0.88",
+      desc: "More sensitive to market's ups & downs",
+      color: "error.main",
+    },
+    {
+      label: "Standard deviation",
+      value: "17.42 vs. 12.97",
+      desc: "More volatile performance",
+      color: "error.main",
+    },
+  ];
+
+  const [tabPeer, setTabPeer] = useState(0);
+
+  const fundManagers = [
+    { name: "Niket Shah" },
+    { name: "Rakesh Shetty" },
+    { name: "Ajay Khandelwal" },
+  ];
 
   return (
     <Box sx={{ width: "100%", bgcolor: "var(--color-background)" }}>
@@ -125,13 +198,13 @@ export default function Page({
               borderRadius: "4rem",
             }}
           >
-            Invest Now
+            Invested
           </Button>
         </Box>
       </Paper>
-      <Box sx={{ p: 4, display: "flex", flexDirection: "column", gap: 2 }}>
+      <Box sx={{ p: 4, display: "flex", flexDirection: "column", gap: 3 }}>
         {/* Top summary */}
-        <Paper sx={{ p: 2, display: "flex", gap: 4 }}>
+        <Paper sx={{ p: 2, display: "flex", justifyContent: "space-around" }}>
           <Box sx={{ p: 2 }}>
             <Typography variant="body2" color="text.secondary">
               NAV as of Sep 15, 2025
@@ -175,9 +248,17 @@ export default function Page({
               </Typography>
             </Typography>
           </Box>
-          <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
+          <Box
+            sx={{
+              p: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
             <Typography variant="body2" color="text.secondary">
-              ET Money Rank
+              Fund Rating
             </Typography>
             <Tooltip title="Genius benefit">
               <Chip
@@ -206,6 +287,22 @@ export default function Page({
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
               ₹34,780 Cr
+            </Typography>
+          </Box>
+          <Box sx={{ p: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              Risk level
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Very High <SpeedIcon sx={{ color: "#e53935", ml: 0.5 }} />
+            </Typography>
+          </Box>
+          <Box sx={{ p: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              SIP Status
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              Active | ₹5,000/month
             </Typography>
           </Box>
         </Paper>
@@ -288,6 +385,7 @@ export default function Page({
           </Box>
         </Paper>
 
+        {/* Fund Details */}
         <Paper sx={{ p: 3, borderRadius: 2, mx: "auto" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
             Motilal Oswal Midcap Fund overview
@@ -668,43 +766,628 @@ export default function Page({
           </Grid>
         </Paper>
 
-        {/* SIP Status */}
+        {/* Trailing Returns */}
         <Paper sx={{ p: 3 }}>
-          <Typography variant="h6" gutterBottom>
-            SIP Status
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+            Trailing returns{" "}
+            <span style={{ fontWeight: 400, color: "#888", fontSize: 14 }}>
+              as on Sep 16, 2025
+            </span>
           </Typography>
-          <List>
-            {sips.map((sip, idx) => (
-              <React.Fragment key={idx}>
-                <ListItem>
-                  <ListItemText
-                    primary={sip.fund}
-                    secondary={
-                      <>
-                        <Typography component="span" variant="body2">
-                          Frequency: {sip.frequency} | Next Due: {sip.nextDue}
-                        </Typography>
-                        <br />
-                        <Chip
-                          label={sip.status}
-                          color={
-                            sip.status === "Active"
-                              ? "success"
-                              : sip.status === "Paused"
-                              ? "warning"
-                              : "default"
-                          }
-                          size="small"
-                          sx={{ mt: 1 }}
-                        />
-                      </>
-                    }
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ fontWeight: 700 }}>Period</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>This fund</TableCell>
+                  <TableCell sx={{ fontWeight: 700 }}>
+                    Category average
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {trailingReturns.map((row) => (
+                  <TableRow key={row.period}>
+                    <TableCell>{row.period}</TableCell>
+                    <TableCell>{row.fund}</TableCell>
+                    <TableCell>{row.avg}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+
+        {/* Asset Allocation */}
+        <Paper sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            Asset allocation{" "}
+            <span style={{ fontWeight: 400, color: "#888", fontSize: 14 }}>
+              as on Aug 31, 2025
+            </span>
+          </Typography>
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            {/* Donut Chart and Legend */}
+            <Grid
+              size={{ xs: 12 }}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ width: 180, height: 180 }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={assetAllocation}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                      startAngle={90}
+                      endAngle={-270}
+                      paddingAngle={2}
+                    >
+                      {assetAllocation.map((entry, idx) => (
+                        <Cell key={entry.name} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    {/* Center label */}
+                    <text
+                      x="50%"
+                      y="50%"
+                      textAnchor="middle"
+                      dominantBaseline="middle"
+                      fontSize="18"
+                      fontWeight="600"
+                      fill="#888"
+                    >
+                      Market Cap
+                    </text>
+                  </PieChart>
+                </ResponsiveContainer>
+              </Box>
+              <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
+                <Typography color="success.main" sx={{ fontWeight: 600 }}>
+                  Equity 97.39%
+                </Typography>
+                <Typography color="text.secondary">Debt 0%</Typography>
+                <Typography color="text.secondary">Other 2.61%</Typography>
+              </Box>
+            </Grid>
+            {/* Legend */}
+            <Grid size={{ xs: 12 }}>
+              <Box
+                sx={{ display: "flex", flexDirection: "column", gap: 1, mt: 2 }}
+              >
+                {assetAllocation.map((item) => (
+                  <Box
+                    key={item.name}
+                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                  >
+                    <Box
+                      sx={{
+                        width: 12,
+                        height: 12,
+                        bgcolor: item.color,
+                        borderRadius: "50%",
+                      }}
+                    />
+                    <Typography variant="body2" sx={{ minWidth: 90 }}>
+                      {item.name}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {item.value}%
+                    </Typography>
+                  </Box>
+                ))}
+              </Box>
+            </Grid>
+          </Grid>
+          <Divider sx={{ my: 2 }} />
+          {/* Top holdings & sectors */}
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                Top holdings
+              </Typography>
+              {topHoldings.map((h) => (
+                <Box key={h.name} sx={{ mb: 1 }}>
+                  <Box
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">{h.name}</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {h.value}%
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: 6,
+                      bgcolor: "#f0f0f0",
+                      borderRadius: 2,
+                      mt: 0.5,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: `${h.value}%`,
+                        height: "100%",
+                        bgcolor: h.color,
+                        borderRadius: 2,
+                      }}
+                    />
+                  </Box>
+                </Box>
+              ))}
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
+                Top sectors
+              </Typography>
+              {topSectors.map((s) => (
+                <Box key={s.name} sx={{ mb: 1 }}>
+                  <Box
+                    sx={{ display: "flex", justifyContent: "space-between" }}
+                  >
+                    <Typography variant="body2">{s.name}</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                      {s.value}%
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: 6,
+                      bgcolor: "#f0f0f0",
+                      borderRadius: 2,
+                      mt: 0.5,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: `${s.value}%`,
+                        height: "100%",
+                        bgcolor: s.color,
+                        borderRadius: 2,
+                      }}
+                    />
+                  </Box>
+                </Box>
+              ))}
+            </Grid>
+          </Grid>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "#00b050",
+              textAlign: "center",
+              mt: 2,
+              cursor: "pointer",
+              fontWeight: 500,
+            }}
+          >
+            Detailed portfolio analysis
+          </Typography>
+        </Paper>
+
+        {/* Peer Comparison */}
+        <Paper sx={{ p: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+            Peer comparison
+          </Typography>
+          <Tabs
+            value={tabPeer}
+            onChange={(_, v) => setTabPeer(v)}
+            sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}
+          >
+            <Tab label="Returns" />
+            <Tab label="Risk ratios" />
+            <Tab label="Other Details" />
+          </Tabs>
+          {/* Returns Tab */}
+          {tabPeer === 0 && (
+            <Box>
+              <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                {["6M", "1Y", "3Y", "5Y", "10Y"].map((label) => (
+                  <Chip
+                    key={label}
+                    label={label}
+                    size="small"
+                    variant={label === "1Y" ? "filled" : "outlined"}
+                    color={label === "1Y" ? "success" : "default"}
                   />
-                </ListItem>
-                {idx < sips.length - 1 && <Divider />}
-              </React.Fragment>
+                ))}
+              </Box>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 700 }}>Fund name</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>
+                      6M
+                    </TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>
+                      1Y
+                    </TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>
+                      3Y
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {[
+                    {
+                      name: "Motilal Oswal Midcap Fund",
+                      m6: "18.2%",
+                      y1: "32.1%",
+                      y3: "22.5%",
+                    },
+                    {
+                      name: "Nippon India Growth Mid Cap Fund",
+                      m6: "16.8%",
+                      y1: "29.7%",
+                      y3: "20.3%",
+                    },
+                    {
+                      name: "HDFC Mid Cap Fund",
+                      m6: "17.5%",
+                      y1: "31.2%",
+                      y3: "21.8%",
+                    },
+                    {
+                      name: "Kotak Midcap Fund",
+                      m6: "15.9%",
+                      y1: "28.6%",
+                      y3: "19.7%",
+                    },
+                    {
+                      name: "Edelweiss Mid Cap Fund",
+                      m6: "17.1%",
+                      y1: "30.4%",
+                      y3: "21.1%",
+                    },
+                  ].map((fund) => (
+                    <TableRow key={fund.name} hover>
+                      <TableCell>{fund.name}</TableCell>
+                      <TableCell align="right">{fund.m6}</TableCell>
+                      <TableCell align="right">{fund.y1}</TableCell>
+                      <TableCell align="right">{fund.y3}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <Button
+                sx={{
+                  mt: 1,
+                  textTransform: "none",
+                  color: "success.main",
+                  fontWeight: 600,
+                  fontSize: 15,
+                }}
+                component={Link}
+                href="#"
+              >
+                View all Mid Cap funds
+              </Button>
+            </Box>
+          )}
+          {/* Risk Ratios Tab */}
+          {tabPeer === 1 && (
+            <Box>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 700 }}>Fund name</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>
+                      Beta
+                    </TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>
+                      Sharpe
+                    </TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>
+                      Sortino
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {[
+                    {
+                      name: "Motilal Oswal Midcap Fund",
+                      beta: 0.89,
+                      sharpe: 1.18,
+                      sortino: 1.43,
+                    },
+                    {
+                      name: "Nippon India Growth Mid Cap Fund",
+                      beta: 0.96,
+                      sharpe: 1.09,
+                      sortino: 1.63,
+                    },
+                    {
+                      name: "HDFC Mid Cap Fund",
+                      beta: 0.85,
+                      sharpe: 1.26,
+                      sortino: 1.83,
+                    },
+                    {
+                      name: "Kotak Midcap Fund",
+                      beta: 0.89,
+                      sharpe: 0.97,
+                      sortino: 1.23,
+                    },
+                    {
+                      name: "Edelweiss Mid Cap Fund",
+                      beta: 0.94,
+                      sharpe: 1.1,
+                      sortino: 1.47,
+                    },
+                  ].map((fund) => (
+                    <TableRow key={fund.name} hover>
+                      <TableCell>{fund.name}</TableCell>
+                      <TableCell align="right">{fund.beta}</TableCell>
+                      <TableCell align="right">{fund.sharpe}</TableCell>
+                      <TableCell align="right">{fund.sortino}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <Button
+                sx={{
+                  mt: 1,
+                  textTransform: "none",
+                  color: "success.main",
+                  fontWeight: 600,
+                  fontSize: 15,
+                }}
+                component={Link}
+                href="#"
+              >
+                View all Mid Cap funds
+              </Button>
+            </Box>
+          )}
+          {/* Other Details Tab */}
+          {tabPeer === 2 && (
+            <Box>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 700 }}>Fund name</TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>
+                      AUM (₹ Cr)
+                    </TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>
+                      Expense Ratio
+                    </TableCell>
+                    <TableCell align="right" sx={{ fontWeight: 700 }}>
+                      Fund Age
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {[
+                    {
+                      name: "Motilal Oswal Midcap Fund",
+                      aum: "34,780",
+                      expense: "0.69%",
+                      age: "11.7 yrs",
+                    },
+                    {
+                      name: "Nippon India Growth Mid Cap Fund",
+                      aum: "28,500",
+                      expense: "0.72%",
+                      age: "14.2 yrs",
+                    },
+                    {
+                      name: "HDFC Mid Cap Fund",
+                      aum: "31,200",
+                      expense: "0.68%",
+                      age: "13.5 yrs",
+                    },
+                    {
+                      name: "Kotak Midcap Fund",
+                      aum: "25,900",
+                      expense: "0.75%",
+                      age: "10.9 yrs",
+                    },
+                    {
+                      name: "Edelweiss Mid Cap Fund",
+                      aum: "22,100",
+                      expense: "0.70%",
+                      age: "9.8 yrs",
+                    },
+                  ].map((fund) => (
+                    <TableRow key={fund.name} hover>
+                      <TableCell>{fund.name}</TableCell>
+                      <TableCell align="right">{fund.aum}</TableCell>
+                      <TableCell align="right">{fund.expense}</TableCell>
+                      <TableCell align="right">{fund.age}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              <Button
+                sx={{
+                  mt: 1,
+                  textTransform: "none",
+                  color: "success.main",
+                  fontWeight: 600,
+                  fontSize: 15,
+                }}
+                component={Link}
+                href="#"
+              >
+                View all Mid Cap funds
+              </Button>
+            </Box>
+          )}
+        </Paper>
+
+        {/* Key risk & return ratios */}
+        <Paper sx={{ p: 2 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+            Key risk & return ratios{" "}
+            <span style={{ color: "#888", fontWeight: 400, fontSize: 14 }}>
+              Compared to other funds in the category
+            </span>
+          </Typography>
+          {riskRatios.map((r) => (
+            <Box key={r.label}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  mb: 0.5,
+                }}
+              >
+                <Typography>{r.label}</Typography>
+                <Typography sx={{ fontWeight: 600 }}>{r.value}</Typography>
+              </Box>
+              <Typography
+                variant="caption"
+                sx={{ color: r.color, mb: 1, display: "block" }}
+              >
+                {r.desc}
+              </Typography>
+              <Divider />
+            </Box>
+          ))}
+          <Typography
+            variant="body2"
+            sx={{ color: "primary.main", mt: 2, cursor: "pointer" }}
+          >
+            What do these terms mean?
+          </Typography>
+        </Paper>
+
+        {/* About this fund */}
+        <Paper sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+            About this fund
+          </Typography>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            About Motilal Oswal Midcap Fund
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1.5 }}>
+            Motilal Oswal Midcap Fund Direct-Growth is a Mid Cap mutual fund
+            scheme from{" "}
+            <Link href="#" color="success.main" underline="hover">
+              Motilal Oswal Mutual Fund
+            </Link>
+            . This fund has been in existence for 11 yrs 7 m, having been
+            launched on 03/02/2014. Motilal Oswal Midcap Fund Direct-Growth has
+            ₹34,780 Crores worth of assets under management (AUM) as on
+            31/08/2025 and is medium-sized fund of its category. The latest Net
+            Asset Value (NAV) of Motilal Oswal Midcap Fund Direct-Growth as of
+            15/09/2025 is ₹120.26. The fund has an expense ratio of 0.69%, which
+            is close to what most other{" "}
+            <Link href="#" color="success.main" underline="hover">
+              Mid Cap funds
+            </Link>{" "}
+            charge.{" "}
+            <Link href="#" color="success.main" underline="hover">
+              ...read more
+            </Link>
+          </Typography>
+          <Grid container spacing={2} sx={{ mb: 2 }}>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="body2" color="text.secondary">
+                Fund AUM
+              </Typography>
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                34,780 Cr as on Aug 31, 2025
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="body2" color="text.secondary">
+                Scheme document
+              </Typography>
+              <Link href="#" color="success.main" underline="hover">
+                View Scheme Document
+              </Link>
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="body2" color="text.secondary">
+                Product Presentation
+              </Typography>
+              <Link href="#" color="success.main" underline="hover">
+                View Product Presentation
+              </Link>
+            </Grid>
+          </Grid>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Fund managers
+          </Typography>
+          <List dense>
+            {fundManagers.map((fm) => (
+              <ListItem
+                key={fm.name}
+                secondaryAction={
+                  <IconButton edge="end" size="small">
+                    <AddIcon fontSize="small" />
+                  </IconButton>
+                }
+                disablePadding
+              >
+                <ListItemText primary={fm.name} />
+              </ListItem>
             ))}
           </List>
+          <Divider sx={{ my: 2 }} />
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Investment objective
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            The scheme seeks to achieve long term capital appreciation by
+            investing in quality mid-cap companies having long-term competitive
+            advantages and potential for growth.
+          </Typography>
+          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+            Motilal Oswal Mutual Fund details
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="body2" color="text.secondary">
+                No. of schemes
+              </Typography>
+              <Typography variant="body2">
+                47{" "}
+                <Link href="#" color="success.main" underline="hover">
+                  view all schemes
+                </Link>
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="body2" color="text.secondary">
+                Total AUM
+              </Typography>
+              <Typography variant="body2">
+                1,09,736 Cr as on Jun 30, 2025
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="body2" color="text.secondary">
+                Address
+              </Typography>
+              <Typography variant="body2">
+                Motilal Oswal Towers - 10th Floor, Rahimtullah Sayani Road,
+                Opposite Parel ST Depot, Prabhadevi, Mumbai, 400025
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 12 }}>
+              <Typography variant="body2" color="text.secondary">
+                Phone
+              </Typography>
+              <Typography variant="body2">
+                022-39804238 / 1800-200-6626
+              </Typography>
+            </Grid>
+          </Grid>
         </Paper>
       </Box>
     </Box>
