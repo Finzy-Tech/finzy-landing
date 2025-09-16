@@ -32,7 +32,18 @@ import StarIcon from "@mui/icons-material/Star";
 import EmojiEmotionsIcon from "@mui/icons-material/EmojiEmotions";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import SpeedIcon from "@mui/icons-material/Speed";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip as RechartsTooltip,
+  Legend,
+} from "recharts";
 import AddIcon from "@mui/icons-material/Add";
 
 export default function Page({
@@ -87,6 +98,28 @@ export default function Page({
     { period: "5 Years", fund: "34.13%", avg: "26.53%" },
     { period: "7 Years", fund: "23.28%", avg: "19.36%" },
     { period: "10 Years", fund: "19.55%", avg: "17.69%" },
+  ];
+
+  // Dummy data for 5Y (monthly points)
+  const navData = [
+    { date: "May '21", fund: 40, avg: 40 },
+    { date: "Aug '21", fund: 44, avg: 43 },
+    { date: "Nov '21", fund: 48, avg: 46 },
+    { date: "Feb '22", fund: 51, avg: 48 },
+    { date: "May '22", fund: 53, avg: 50 },
+    { date: "Aug '22", fund: 54, avg: 51 },
+    { date: "Nov '22", fund: 56, avg: 52 },
+    { date: "Feb '23", fund: 60, avg: 54 },
+    { date: "May '23", fund: 68, avg: 58 },
+    { date: "Aug '23", fund: 80, avg: 65 },
+    { date: "Nov '23", fund: 95, avg: 75 },
+    { date: "Feb '24", fund: 110, avg: 85 },
+    { date: "May '24", fund: 105, avg: 82 },
+    { date: "Aug '24", fund: 115, avg: 90 },
+    { date: "Nov '24", fund: 120, avg: 95 },
+    { date: "Feb '25", fund: 112, avg: 92 },
+    { date: "May '25", fund: 118, avg: 97 },
+    { date: "Sep '25", fund: 120.26, avg: 100 },
   ];
 
   const assetAllocation = [
@@ -343,9 +376,45 @@ export default function Page({
             }}
           >
             {/* Replace this with a real chart */}
-            <Typography color="text.secondary" sx={{ opacity: 0.5 }}>
-              [Chart goes here]
-            </Typography>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={navData}
+                margin={{ left: 10, right: 30, top: 20, bottom: 20 }}
+              >
+                <XAxis dataKey="date" tick={{ fontSize: 12 }} />
+                <YAxis
+                  domain={["auto", "auto"]}
+                  tickFormatter={(v) => `₹${v}`}
+                  tick={{ fontSize: 12 }}
+                />
+                <RechartsTooltip
+                  formatter={(value: number) => `₹${value.toFixed(2)}`}
+                  labelFormatter={(label) => `Date: ${label}`}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="fund"
+                  stroke="#1976d2"
+                  strokeWidth={2.5}
+                  dot={false}
+                  name="This fund"
+                />
+                <Line
+                  type="monotone"
+                  dataKey="avg"
+                  stroke="#ffb300"
+                  strokeWidth={2.5}
+                  dot={false}
+                  name="Category average"
+                />
+                <Legend
+                  verticalAlign="top"
+                  align="right"
+                  iconType="circle"
+                  wrapperStyle={{ top: 0, right: 20 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
             {/* Legend */}
             <Box
               sx={{
