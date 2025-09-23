@@ -38,6 +38,7 @@ import {
 import { useRouter } from "next/navigation";
 import axiosPipelineInstance from "@/app/utils/axiosPipeline";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { Toaster, toast } from "react-hot-toast";
 
 type Fund = {
   "id": number,
@@ -179,7 +180,7 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
     try {
       const formData = new FormData();
       if (!form.casFile) {
-        alert("Please upload a CAS file.");
+        toast.error("Please upload a CAS file.");
         return;
       }
       formData.append("casFile", form.casFile);
@@ -189,10 +190,10 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
       setHoldings(mf_data);
       setIsPortfolioPresent(false);
       setUploadDialog(false);
-      alert("CAS file processed successfully!");
+      toast.success("CAS file processed successfully!");
     } catch (error) {
       console.error("Error processing CAS file:", error);
-      alert("Failed to process CAS file. Please try again.");
+      toast.error("Failed to process CAS file. Please try again.");
     }
   };
 
@@ -412,7 +413,9 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
                     <TableCell>₹{h.value}</TableCell>
                     <TableCell>{h.return}%</TableCell>
                     <TableCell>{h.nav}</TableCell>
-                    <TableCell>{(parseFloat(h.total_cost) / parseFloat(h.nav)).toFixed(2)}</TableCell>
+                    <TableCell> {parseFloat(h.nav) > 0 && !isNaN(parseFloat(h.nav)) && !isNaN(parseFloat(h.total_cost))
+                        ? (parseFloat(h.total_cost) / parseFloat(h.nav)).toFixed(2)
+                        : "N/A"}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -420,6 +423,7 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
           </TableContainer>
         </Box>
       )}
+      <Toaster position="top-right" />
     </Box>
   );
 }
