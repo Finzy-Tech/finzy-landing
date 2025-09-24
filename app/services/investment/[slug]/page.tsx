@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -45,6 +45,10 @@ import {
   Legend,
 } from "recharts";
 import AddIcon from "@mui/icons-material/Add";
+import axiosPipelineInstance from "@/app/utils/axiosPipeline";
+import { useMfStore } from "@/app/store/mfStore";
+import { useRouter } from "next/navigation";
+import { FinzyMfData } from "@/types/types";
 
 export default function Page({
   params,
@@ -52,6 +56,10 @@ export default function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
+
+  const { selectedMf } = useMfStore();
+
+  const [finzyMfData, setFinzyMfData] = useState<FinzyMfData | null>(null);
 
   const [sipAmount, setSipAmount] = useState(1000);
   const [sipDuration, setSipDuration] = useState(12);
@@ -178,6 +186,8 @@ export default function Page({
     },
   ];
 
+  const router = useRouter();
+
   const [tabPeer, setTabPeer] = useState(0);
 
   const fundManagers = [
@@ -185,6 +195,36 @@ export default function Page({
     { name: "Rakesh Shetty" },
     { name: "Ajay Khandelwal" },
   ];
+
+  const fetchMutualFunds = async () => {
+    try {
+      const response = await axiosPipelineInstance.get(
+        "/api/fetch-mf-data?scheme_id=" + slug
+      );
+      console.log("Mutual Funds Data:", response.data);
+      // Process and use the data as needed
+      return response.data.data;
+    } catch (error) {
+      console.error("Error fetching mutual funds data:", error);
+      return [];
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const mutualFunds = await fetchMutualFunds();
+      setFinzyMfData(mutualFunds);
+      // Do something with the mutual funds data
+    };
+    fetchData();
+  }, []);
+
+  console.log("checking selectedMf", selectedMf);
+  console.log("checking finzyMfData", finzyMfData);
+
+  if (!selectedMf || !finzyMfData) {
+    return null;
+  }
 
   return (
     <Box sx={{ width: "100%", bgcolor: "var(--color-background)" }}>
@@ -202,7 +242,7 @@ export default function Page({
           <Image src="/mf.jpg" alt="Fund Image" width={100} height={100} />
           <Box>
             <Typography variant="h4" gutterBottom>
-              Motilal Oswal Midcap Fund
+              {selectedMf.name}
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Chip
@@ -240,10 +280,15 @@ export default function Page({
         <Paper sx={{ p: 2, display: "flex", justifyContent: "space-around" }}>
           <Box sx={{ p: 2 }}>
             <Typography variant="body2" color="text.secondary">
-              NAV as of Sep 15, 2025
+              NAV as of{" "}
+              {new Date().toLocaleDateString("en-GB", {
+                month: "short",
+                day: "2-digit",
+                year: "numeric",
+              })}
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              ₹120.26{" "}
+              {selectedMf.nav}{" "}
               <Typography
                 component="span"
                 variant="body2"
@@ -270,7 +315,7 @@ export default function Page({
               variant="h6"
               sx={{ fontWeight: 600, color: "success.main" }}
             >
-              23.98%{" "}
+              {selectedMf.return}%{" "}
               <Typography
                 component="span"
                 variant="body2"
@@ -319,7 +364,7 @@ export default function Page({
               AUM (Fund size)
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              ₹34,780 Cr
+              {finzyMfData.aum_cr} Cr
             </Typography>
           </Box>
           <Box sx={{ p: 2 }}>
