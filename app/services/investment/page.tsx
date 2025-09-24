@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -39,27 +39,8 @@ import { useRouter } from "next/navigation";
 import axiosPipelineInstance from "@/app/utils/axiosPipeline";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Toaster, toast } from "react-hot-toast";
-
-type Fund = {
-  "id": number,
-  "avg_cost": string,
-  "balance": string,
-  "folio": string,
-  "isin": string,
-  "name": string,
-  "nav": string,
-  "pnl": string,
-  "return": string,
-  "total_cost": string,
-  "ucc": string,
-  "value": string
-}
-
-type Holdings={
-  balance: number,
-  folios: number,
-  mutual_funds: Array<Fund>
-}
+import { Holdings } from "@/types/types";
+import { useMfStore } from "@/app/store/mfStore";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -119,36 +100,38 @@ const lineData = [
 
 export default function InvestmentPage() {
   const [fundFilter, setFundFilter] = useState("All");
-  const [isPortfolioPresent, setIsPortfolioPresent] = useState(true);
+  const [isPortfolioPresent, setIsPortfolioPresent] = useState(false);
   const [form, setForm] = useState<{
     casFile: File | null;
     password: string;
     user_id: string;
   }>({ casFile: null, password: "", user_id: "testing" });
   const [uploadDialog, setUploadDialog] = useState(false);
-  const [holdings, setHoldings] = useState<Holdings | null>(null);
+  const { holdings, setHoldings, setSelectedMf } = useMfStore();
 
   let returns = null;
 
   let investedAmount = 0;
   let currentValue = 0;
 
-if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
-  const totalInvested = holdings.mutual_funds.reduce(
-    (sum, rec) => sum + parseFloat(rec.total_cost),
-    0
-  );
-  const totalValue = holdings.mutual_funds.reduce(
-    (sum, rec) => sum + parseFloat(rec.value),
-    0
-  );
-  const simpleReturn =
-    totalInvested > 0 ? ((totalValue - totalInvested) / totalInvested) * 100 : 0;
+  if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
+    const totalInvested = holdings.mutual_funds.reduce(
+      (sum, rec) => sum + parseFloat(rec.total_cost),
+      0
+    );
+    const totalValue = holdings.mutual_funds.reduce(
+      (sum, rec) => sum + parseFloat(rec.value),
+      0
+    );
+    const simpleReturn =
+      totalInvested > 0
+        ? ((totalValue - totalInvested) / totalInvested) * 100
+        : 0;
 
-  investedAmount = totalInvested;
-  currentValue = totalValue;
-  returns = simpleReturn.toFixed(2);
-}
+    investedAmount = totalInvested;
+    currentValue = totalValue;
+    returns = simpleReturn.toFixed(2);
+  }
 
   const router = useRouter();
 
@@ -197,6 +180,12 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
     }
   };
 
+  useEffect(()=>{
+    if(holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0){
+      setIsPortfolioPresent(true);
+    }
+  },[holdings])
+
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -243,7 +232,7 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
         </Card>
       )}
 
-      {isPortfolioPresent ? (
+      {!isPortfolioPresent ? (
         <Card sx={{ mx: "auto", mt: 4 }}>
           <CardContent>
             <Typography variant="h6" align="center" gutterBottom>
@@ -263,7 +252,13 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
               variant="contained"
               component="label"
               onClick={() => setUploadDialog(true)}
-              sx={{ mt: 6, display: "flex", justifyContent: "center", mx: "auto", width: '200px' }}
+              sx={{
+                mt: 6,
+                display: "flex",
+                justifyContent: "center",
+                mx: "auto",
+                width: "200px",
+              }}
             >
               Upload CAS File
             </Button>
@@ -347,22 +342,18 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
               <Grid container spacing={2} sx={{ mb: 2 }}>
                 <Grid size={12}>
                   <Typography>
-                    Invested Amount:{" "}
-                    <b>₹{investedAmount}</b>
+                    Invested Amount: <b>₹{investedAmount}</b>
                   </Typography>
                 </Grid>
                 <Grid size={12}>
                   <Typography>
-                    Current Value:{" "}
-                    <b>₹{currentValue}</b>
+                    Current Value: <b>₹{currentValue}</b>
                   </Typography>
                 </Grid>
                 <Grid size={12}>
                   <Chip
                     label={`Simple Return: ${returns}%`}
-                    color={
-                      Number(returns) >= 0 ? "success" : "error"
-                    }
+                    color={Number(returns) >= 0 ? "success" : "error"}
                   />
                 </Grid>
               </Grid>
@@ -382,7 +373,6 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
               </ResponsiveContainer>
             </CardContent>
           </Card>
-         
 
           {/* Holdings Table */}
           <TableContainer component={Paper} sx={{ mb: 4 }}>
@@ -397,15 +387,16 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
                   <TableCell>Units</TableCell>
                 </TableRow>
               </TableHead>
-             
+
               <TableBody>
                 {holdings?.mutual_funds.map((h, idx) => (
                   <TableRow key={idx}>
                     <TableCell
                       sx={{ cursor: "pointer" }}
-                      onClick={() =>
-                        router.push(`/services/investment/${h.id}`)
-                      }
+                      onClick={() => {
+                        setSelectedMf(h);
+                        router.push(`/services/investment/${h.scheme_id}`);
+                      }}
                     >
                       {h.name}
                     </TableCell>
@@ -413,9 +404,16 @@ if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
                     <TableCell>₹{h.value}</TableCell>
                     <TableCell>{h.return}%</TableCell>
                     <TableCell>{h.nav}</TableCell>
-                    <TableCell> {parseFloat(h.nav) > 0 && !isNaN(parseFloat(h.nav)) && !isNaN(parseFloat(h.total_cost))
-                        ? (parseFloat(h.total_cost) / parseFloat(h.nav)).toFixed(2)
-                        : "N/A"}</TableCell>
+                    <TableCell>
+                      {" "}
+                      {parseFloat(h.nav) > 0 &&
+                      !isNaN(parseFloat(h.nav)) &&
+                      !isNaN(parseFloat(h.total_cost))
+                        ? (
+                            parseFloat(h.total_cost) / parseFloat(h.nav)
+                          ).toFixed(2)
+                        : "N/A"}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
