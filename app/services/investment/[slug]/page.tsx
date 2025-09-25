@@ -61,6 +61,11 @@ export default function Page({
 
   const [finzyMfData, setFinzyMfData] = useState<FinzyMfData | null>(null);
 
+  
+  if (!selectedMf || !finzyMfData) {
+    return null;
+  }
+
   const [sipAmount, setSipAmount] = useState(1000);
   const [sipDuration, setSipDuration] = useState(12);
   const [sipReturnRate, setSipReturnRate] = useState(12);
@@ -96,16 +101,14 @@ export default function Page({
 
   // Trailing returns data
   const trailingReturns = [
-    { period: "1 Month", fund: "2.18%", avg: "1.5%" },
-    { period: "3 Months", fund: "4.11%", avg: "2.05%" },
-    { period: "6 Months", fund: "18.32%", avg: "20.13%" },
-    { period: "1 Year", fund: "-0.26%", avg: "-1.01%" },
-    { period: "2 Years", fund: "29.65%", avg: "22.15%" },
-    { period: "3 Years", fund: "28.02%", avg: "22.08%" },
-    { period: "4 Years", fund: "27.07%", avg: "17.68%" },
-    { period: "5 Years", fund: "34.13%", avg: "26.53%" },
-    { period: "7 Years", fund: "23.28%", avg: "19.36%" },
-    { period: "10 Years", fund: "19.55%", avg: "17.69%" },
+    { period: "1 Month", fund: finzyMfData?.return_1mo_pct + "%", avg: "1.5%" },
+    { period: "3 Months", fund: finzyMfData?.return_3mo_pct + "%", avg: "2.05%" },
+    { period: "6 Months", fund: finzyMfData?.return_6mo_pct + "%", avg: "20.13%" },
+    { period: "1 Year", fund: finzyMfData?.return_1yr_pct + "%", avg: "-1.01%" },
+    { period: "2 Years", fund: finzyMfData?.return_2yr_pct + "%", avg: "22.15%" },
+    { period: "3 Years", fund: finzyMfData?.return_3yr_pct + "%", avg: "22.08%" },
+    { period: "5 Years", fund: finzyMfData?.return_5yr_pct + "%", avg: "26.53%" },
+    { period: "10 Years", fund: finzyMfData?.return_10yr_pct + "%", avg: "17.69%" },
   ];
 
   // Dummy data for 5Y (monthly points)
@@ -131,10 +134,9 @@ export default function Page({
   ];
 
   const assetAllocation = [
-    { name: "Large Cap", value: 21.37, color: "#6fdbe8" },
-    { name: "Mid Cap", value: 76.02, color: "#ff9c92" },
-    { name: "Small Cap", value: 0, color: "#ffd580" },
-    { name: "Other Cap", value: 0, color: "#bdbdbd" },
+    { name: "Large Cap", value: parseFloat(finzyMfData?.large_cap_pct), color: "#6fdbe8" },
+    { name: "Mid Cap", value: parseFloat(finzyMfData?.mid_cap_pct), color: "#ff9c92" },
+    { name: "Small Cap", value: parseFloat(finzyMfData?.small_cap_pct), color: "#ffd580" },
   ];
 
   const topHoldings = [
@@ -222,9 +224,17 @@ export default function Page({
   console.log("checking selectedMf", selectedMf);
   console.log("checking finzyMfData", finzyMfData);
 
-  if (!selectedMf || !finzyMfData) {
-    return null;
-  }
+  const calculateAge = (inceptionDate: string) => {
+    const inception = new Date(inceptionDate);
+    const now = new Date();
+    let years = now.getFullYear() - inception.getFullYear();
+    let months = now.getMonth() - inception.getMonth();
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+    return `${years} yrs ${months} m`;
+  };
 
   return (
     <Box sx={{ width: "100%", bgcolor: "var(--color-background)" }}>
@@ -502,7 +512,7 @@ export default function Page({
         {/* Fund Details */}
         <Paper sx={{ p: 3, borderRadius: 2, mx: "auto" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-            Motilal Oswal Midcap Fund overview
+            Fund overview
           </Typography>
           <Grid container spacing={1}>
             {/* Expense ratio */}
@@ -511,14 +521,14 @@ export default function Page({
             </Grid>
             <Grid size={{ xs: 6 }}>
               <Typography>
-                0.69%
+                {finzyMfData.expense_ratio_pct}%
                 <Typography
                   component="span"
                   variant="body2"
                   color="text.secondary"
                   sx={{ ml: 1 }}
                 >
-                  as on Aug 31, 2025
+                  as on {new Date().toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" })}
                 </Typography>
               </Typography>
             </Grid>
@@ -540,7 +550,7 @@ export default function Page({
             </Grid>
             <Grid size={{ xs: 6 }}>
               <Typography>
-                1.0%
+                {finzyMfData.exit_load_remarks || "Nil"}
                 <Tooltip title="Fee charged if you redeem before a certain period">
                   <InfoOutlinedIcon
                     fontSize="small"
@@ -558,7 +568,7 @@ export default function Page({
               <Typography>AUM (Fund size)</Typography>
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <Typography>₹34,780 Cr</Typography>
+              <Typography>₹{finzyMfData.aum_cr} Cr</Typography>
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Divider />
@@ -581,14 +591,14 @@ export default function Page({
             </Grid>
             <Grid size={{ xs: 6 }}>
               <Typography>
-                11 yrs 7 m
+                {calculateAge(finzyMfData.inception_date)}
                 <Typography
                   component="span"
                   variant="body2"
                   color="text.secondary"
                   sx={{ ml: 1 }}
                 >
-                  since Feb 03, 2014
+                  since {new Date(finzyMfData.inception_date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" })}
                 </Typography>
               </Typography>
             </Grid>
@@ -601,7 +611,7 @@ export default function Page({
               <Typography>Benchmark</Typography>
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <Typography>NIFTY Midcap 150 TRI</Typography>
+              <Typography>{finzyMfData.benchmark_index}</Typography>
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Divider />
@@ -663,7 +673,7 @@ export default function Page({
         {/* SIP Calculator */}
         <Paper sx={{ p: 3, borderRadius: 2 }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
-            Motilal Oswal Midcap Fund Returns calculator
+            Fund Returns calculator
           </Typography>
           <Grid container spacing={3}>
             {/* Left: Controls */}
@@ -885,7 +895,7 @@ export default function Page({
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
             Trailing returns{" "}
             <span style={{ fontWeight: 400, color: "#888", fontSize: 14 }}>
-              as on Sep 16, 2025
+              as on {new Date().toLocaleDateString("en-GB", { month: "short", day: "2-digit", year: "numeric" })}
             </span>
           </Typography>
           <TableContainer>
@@ -917,7 +927,7 @@ export default function Page({
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Asset allocation{" "}
             <span style={{ fontWeight: 400, color: "#888", fontSize: 14 }}>
-              as on Aug 31, 2025
+              as on {new Date().toLocaleDateString("en-GB", { month: "short", day: "2-digit", year: "numeric" })}
             </span>
           </Typography>
           <Grid container spacing={2} sx={{ mt: 2 }}>
