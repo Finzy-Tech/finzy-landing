@@ -279,10 +279,10 @@ export default function Page({
   ];
 
   return (
-    <Box sx={{ width: "100%", bgcolor: "var(--color-background)" }}>
+    <Box sx={{ width: "100%" }}>
+      <Box sx={{ p: 4, display: "flex", flexDirection: "column", gap: 3, paddingTop: 15 }}>
       <Paper
         sx={{
-          width: "100%",
           display: "flex",
           py: 4,
           px: 8,
@@ -327,7 +327,6 @@ export default function Page({
           </Button>
         </Box>
       </Paper>
-      <Box sx={{ p: 4, display: "flex", flexDirection: "column", gap: 3 }}>
         {/* Top summary */}
         <Paper sx={{ p: 2, display: "flex", justifyContent: "space-around" }}>
           <Box sx={{ p: 2 }}>
