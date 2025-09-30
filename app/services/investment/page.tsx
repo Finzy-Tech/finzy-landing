@@ -22,9 +22,12 @@ import {
   MenuItem,
   Select,
   InputLabel,
+  FormControl,
   Dialog,
   TextField,
   styled,
+  Stack,
+  Divider,
 } from "@mui/material";
 import {
   Tooltip,
@@ -38,6 +41,8 @@ import {
 import { useRouter } from "next/navigation";
 import axiosPipelineInstance from "@/app/utils/axiosPipeline";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { Toaster, toast } from "react-hot-toast";
 import { Holdings } from "@/types/types";
 import { useMfStore } from "@/app/store/mfStore";
@@ -93,11 +98,6 @@ const lineData = [
   { date: "Dec", value: portfolioValue },
 ];
 
-// const holdings = [
-//   { fundName: "Motilal Oswal Midcap Fund", category: "Equity", fiveYearReturn: 12, invested: 10000, nav: 120, units: 83.33, id: 12340 },
-//   { fundName: "Finzy Secure Fund", category: "Debt", fiveYearReturn: 8, invested: 5000, nav: 105, units: 47.62, id: 12341 },
-// ];
-
 export default function InvestmentPage() {
   const [fundFilter, setFundFilter] = useState("All");
   const [isPortfolioPresent, setIsPortfolioPresent] = useState(false);
@@ -110,7 +110,6 @@ export default function InvestmentPage() {
   const { holdings, setHoldings, setSelectedMf } = useMfStore();
 
   let returns = null;
-
   let investedAmount = 0;
   let currentValue = 0;
 
@@ -135,7 +134,6 @@ export default function InvestmentPage() {
 
   const router = useRouter();
 
-  // Filtered recommended funds
   const filteredFunds =
     fundFilter === "All"
       ? recommendations
@@ -180,247 +178,337 @@ export default function InvestmentPage() {
     }
   };
 
-  useEffect(()=>{
-    if(holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0){
+  useEffect(() => {
+    if (holdings && holdings.mutual_funds && holdings.mutual_funds.length > 0) {
       setIsPortfolioPresent(true);
     }
-  },[holdings])
+  }, [holdings]);
 
   return (
-    <Box sx={{ p: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Investments
-      </Typography>
+    <Box sx={{ maxWidth: "100%", px: { xs: 2, md: 4, lg: 6 }, py: { xs: 2, md: 3 } }}>
+      {/* Header */}
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, color: "text.primary" }}>
+          Investment Dashboard
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Manage your portfolio and explore investment opportunities
+        </Typography>
+      </Box>
 
       {/* Recommended Funds */}
       {riskProfileExists && (
-        <Card sx={{ mb: 4 }}>
-          <CardContent>
-            <Typography variant="h6" gutterBottom>
-              Recommended Funds
-            </Typography>
-            <InputLabel>Filter by Category</InputLabel>
-            <Select
-              sx={{ minWidth: 150 }}
-              value={fundFilter}
-              onChange={(e) => setFundFilter(e.target.value)}
-            >
-              <MenuItem value="All">All</MenuItem>
-              <MenuItem value="Equity">Equity</MenuItem>
-              <MenuItem value="Debt">Debt</MenuItem>
-              <MenuItem value="Hybrid">Hybrid</MenuItem>
-            </Select>
-            <List>
+        <Card sx={{ mb: 4, boxShadow: 2 }}>
+          <CardContent sx={{ p: 3 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+              <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                Recommended Funds
+              </Typography>
+              <FormControl sx={{ minWidth: 150 }}>
+                <InputLabel size="small">Filter by Category</InputLabel>
+                <Select
+                  size="small"
+                  value={fundFilter}
+                  label="Filter by Category"
+                  onChange={(e) => setFundFilter(e.target.value)}
+                >
+                  <MenuItem value="All">All Categories</MenuItem>
+                  <MenuItem value="Equity">Equity</MenuItem>
+                  <MenuItem value="Debt">Debt</MenuItem>
+                  <MenuItem value="Hybrid">Hybrid</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
+            
+            <Stack spacing={2}>
               {filteredFunds.map((rec, idx) => (
-                <ListItem key={idx} divider>
-                  <ListItemText
-                    primary={rec.name}
-                    secondary={`Category: ${rec.category} | Risk: ${rec.risk} | 5Y Return: ${rec.fiveYearReturn}% | NAV: ₹${rec.nav}`}
-                  />
-                  <Button
-                    variant="contained"
-                    onClick={() =>
-                      router.push(`/services/investment/${rec.id}`)
-                    }
-                  >
-                    Start SIP
-                  </Button>
-                </ListItem>
+                <Paper key={idx} variant="outlined" sx={{ p: 2 }}>
+                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 500 }}>
+                        {rec.name}
+                      </Typography>
+                      <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+                        <Chip label={rec.category} size="small" color="primary" variant="outlined" />
+                        <Chip 
+                          label={`Risk: ${rec.risk}`} 
+                          size="small" 
+                          color={rec.risk === "Low" ? "success" : rec.risk === "High" ? "error" : "warning"}
+                          variant="outlined"
+                        />
+                      </Stack>
+                      <Grid container spacing={3} sx={{ mt: 1 }}>
+                        <Grid>
+                          <Typography variant="body2" color="text.secondary">
+                            5Y Return
+                          </Typography>
+                          <Typography variant="body1" sx={{ fontWeight: 500, color: "success.main" }}>
+                            {rec.fiveYearReturn}%
+                          </Typography>
+                        </Grid>
+                        <Grid>
+                          <Typography variant="body2" color="text.secondary">
+                            NAV
+                          </Typography>
+                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                            ₹{rec.nav}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                    <Button
+                      variant="contained"
+                      size="large"
+                      sx={{ ml: 2, minWidth: 120 }}
+                      onClick={() => router.push(`/services/investment/${rec.id}`)}
+                    >
+                      Start SIP
+                    </Button>
+                  </Box>
+                </Paper>
               ))}
-            </List>
+            </Stack>
           </CardContent>
         </Card>
       )}
 
       {!isPortfolioPresent ? (
-        <Card sx={{ mx: "auto", mt: 4 }}>
-          <CardContent>
-            <Typography variant="h6" align="center" gutterBottom>
-              Your portfolio is not uploaded yet. Please upload your CAS file to
-              get started.
+        <Card sx={{ boxShadow: 2, textAlign: "center" }}>
+          <CardContent sx={{ p: 4 }}>
+            <AccountBalanceWalletIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
+            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
+              Upload Your Portfolio
             </Typography>
-            <Typography
-              variant="body2"
-              align="center"
-              color="text.secondary"
-              gutterBottom
-            >
-              Get started by exploring recommended funds based on your risk
-              profile or uploading your portfolio.
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 500, mx: "auto" }}>
+              Get started by uploading your CAS (Consolidated Account Statement) file to view your current investments and get personalized recommendations.
             </Typography>
             <Button
               variant="contained"
-              component="label"
+              size="large"
+              startIcon={<CloudUploadIcon />}
               onClick={() => setUploadDialog(true)}
-              sx={{
-                mt: 6,
-                display: "flex",
-                justifyContent: "center",
-                mx: "auto",
-                width: "200px",
-              }}
+              sx={{ minWidth: 200 }}
             >
               Upload CAS File
             </Button>
           </CardContent>
-
-          <Dialog open={uploadDialog} onClose={() => setUploadDialog(false)}>
-            <Box sx={{ p: 4, minWidth: 300 }}>
-              <Typography variant="h6" gutterBottom>
-                Upload CAS File
-              </Typography>
-              {/* File Upload Section */}
-              {form.casFile ? (
-                <Box
-                  sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}
-                >
-                  <Chip
-                    label={form.casFile.name}
-                    color="primary"
-                    variant="outlined"
-                    sx={{ maxWidth: 200 }}
-                  />
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={() => setForm({ ...form, casFile: null })}
-                  >
-                    Remove
-                  </Button>
-                </Box>
-              ) : (
-                <Button
-                  component="label"
-                  role={undefined}
-                  variant="contained"
-                  tabIndex={-1}
-                  startIcon={<CloudUploadIcon />}
-                  sx={{ mb: 2 }}
-                >
-                  Upload file
-                  <VisuallyHiddenInput
-                    type="file"
-                    onChange={(event) =>
-                      setForm({
-                        ...form,
-                        casFile:
-                          event.target.files && event.target.files.length > 0
-                            ? event.target.files[0]
-                            : null,
-                      })
-                    }
-                    accept=".pdf,.zip"
-                  />
-                </Button>
-              )}
-              <TextField
-                label="Password"
-                type="password"
-                fullWidth
-                margin="normal"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-              />
-              <Button
-                variant="contained"
-                sx={{ mt: 2 }}
-                onClick={handleCasUpload}
-              >
-                Submit
-              </Button>
-            </Box>
-          </Dialog>
         </Card>
       ) : (
-        <Box>
+        <Stack spacing={4}>
           {/* Portfolio Overview */}
-          <Card sx={{ mb: 4 }}>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
+          <Card sx={{ boxShadow: 2 }}>
+            <CardContent sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
                 Portfolio Overview
               </Typography>
-              <Grid container spacing={2} sx={{ mb: 2 }}>
-                <Grid size={12}>
-                  <Typography>
-                    Invested Amount: <b>₹{investedAmount}</b>
-                  </Typography>
+              
+              <Grid container spacing={3} sx={{ mb: 3 }}>
+                <Grid size={{ xs: 12, sm: 4 }} >
+                  <Box sx={{ textAlign: "center", p: 2 }}>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Invested Amount
+                    </Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
+                      ₹{investedAmount.toLocaleString()}
+                    </Typography>
+                  </Box>
                 </Grid>
-                <Grid size={12}>
-                  <Typography>
-                    Current Value: <b>₹{currentValue}</b>
-                  </Typography>
+                <Grid size={{ xs: 12, sm: 4 }}>
+                  <Box sx={{ textAlign: "center", p: 2 }}>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Current Value
+                    </Typography>
+                    <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
+                      ₹{currentValue.toLocaleString()}
+                    </Typography>
+                  </Box>
                 </Grid>
-                <Grid size={12}>
-                  <Chip
-                    label={`Simple Return: ${returns}%`}
-                    color={Number(returns) >= 0 ? "success" : "error"}
-                  />
+                <Grid size={{ xs: 12, sm: 4 }}>
+                  <Box sx={{ textAlign: "center", p: 2 }}>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Total Returns
+                    </Typography>
+                    <Chip
+                      icon={<TrendingUpIcon />}
+                      label={`${returns}%`}
+                      color={Number(returns) >= 0 ? "success" : "error"}
+                      sx={{ fontSize: "1.1rem", fontWeight: 600, height: 40 }}
+                    />
+                  </Box>
                 </Grid>
               </Grid>
 
-              {/* Line Chart for Performance */}
-              <Typography variant="subtitle1" gutterBottom>
+              <Divider sx={{ my: 3 }} />
+
+              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>
                 Portfolio Performance
               </Typography>
-              <ResponsiveContainer width="100%" height={200}>
-                <LineChart data={lineData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                </LineChart>
-              </ResponsiveContainer>
+              <Box sx={{ height: 250, width: "100%" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={lineData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke="#1976d2" 
+                      strokeWidth={2}
+                      dot={{ fill: "#1976d2", strokeWidth: 2, r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </Box>
             </CardContent>
           </Card>
 
           {/* Holdings Table */}
-          <TableContainer component={Paper} sx={{ mb: 4 }}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Fund Name</TableCell>
-                  <TableCell>Invested Amount</TableCell>
-                  <TableCell>Current Value</TableCell>
-                  <TableCell>Total Return</TableCell>
-                  <TableCell>Current NAV</TableCell>
-                  <TableCell>Units</TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {holdings?.mutual_funds.map((h, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell
-                      sx={{ cursor: "pointer" }}
-                      onClick={() => {
-                        setSelectedMf(h);
-                        router.push(`/services/investment/${h.scheme_id}`);
-                      }}
-                    >
-                      {h.name}
-                    </TableCell>
-                    <TableCell>{h.total_cost}</TableCell>
-                    <TableCell>₹{h.value}</TableCell>
-                    <TableCell>{h.return}%</TableCell>
-                    <TableCell>{h.nav}</TableCell>
-                    <TableCell>
-                      {" "}
-                      {parseFloat(h.nav) > 0 &&
-                      !isNaN(parseFloat(h.nav)) &&
-                      !isNaN(parseFloat(h.total_cost))
-                        ? (
-                            parseFloat(h.total_cost) / parseFloat(h.nav)
-                          ).toFixed(2)
-                        : "N/A"}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Box>
+          <Card sx={{ boxShadow: 2 }}>
+            <CardContent sx={{ p: 0 }}>
+              <Box sx={{ p: 3, pb: 0 }}>
+                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  Your Holdings
+                </Typography>
+              </Box>
+              <TableContainer>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ bgcolor: "grey.50" }}>
+                      <TableCell sx={{ fontWeight: 600 }}>Fund Name</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Invested Amount</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Current Value</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Returns</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Current NAV</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>Units</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {holdings?.mutual_funds.map((h, idx) => (
+                      <TableRow 
+                        key={idx}
+                        hover
+                        sx={{ cursor: "pointer", "&:hover": { bgcolor: "action.hover" } }}
+                        onClick={() => {
+                          setSelectedMf(h);
+                          router.push(`/services/investment/${h.scheme_id}`);
+                        }}
+                      >
+                        <TableCell>
+                          <Typography variant="body2" sx={{ fontWeight: 500, color: "primary.main" }}>
+                            {h.name}
+                          </Typography>
+                        </TableCell>
+                        <TableCell>₹{parseFloat(h.total_cost).toLocaleString()}</TableCell>
+                        <TableCell>₹{parseFloat(h.value).toLocaleString()}</TableCell>
+                        <TableCell>
+                          <Chip
+                            label={`${h.return}%`}
+                            color={parseFloat(h.return) >= 0 ? "success" : "error"}
+                            size="small"
+                            variant="outlined"
+                          />
+                        </TableCell>
+                        <TableCell>₹{h.nav}</TableCell>
+                        <TableCell>
+                          {parseFloat(h.nav) > 0 &&
+                          !isNaN(parseFloat(h.nav)) &&
+                          !isNaN(parseFloat(h.total_cost))
+                            ? (parseFloat(h.total_cost) / parseFloat(h.nav)).toFixed(2)
+                            : "N/A"}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </CardContent>
+          </Card>
+        </Stack>
       )}
+
+      {/* Upload Dialog */}
+      <Dialog 
+        open={uploadDialog} 
+        onClose={() => setUploadDialog(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <Box sx={{ p: 4 }}>
+          <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+            Upload CAS File
+          </Typography>
+          
+          {form.casFile ? (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
+              <Chip
+                label={form.casFile.name}
+                color="primary"
+                variant="outlined"
+                sx={{ maxWidth: 250 }}
+              />
+              <Button
+                variant="outlined"
+                color="error"
+                size="small"
+                onClick={() => setForm({ ...form, casFile: null })}
+              >
+                Remove
+              </Button>
+            </Box>
+          ) : (
+            <Button
+              component="label"
+              variant="outlined"
+              startIcon={<CloudUploadIcon />}
+              sx={{ mb: 3, width: "100%" }}
+              size="large"
+            >
+              Select CAS File
+              <VisuallyHiddenInput
+                type="file"
+                onChange={(event) =>
+                  setForm({
+                    ...form,
+                    casFile:
+                      event.target.files && event.target.files.length > 0
+                        ? event.target.files[0]
+                        : null,
+                  })
+                }
+                accept=".pdf,.zip"
+              />
+            </Button>
+          )}
+          
+          <TextField
+            label="Password"
+            type="password"
+            fullWidth
+            margin="normal"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            sx={{ mb: 3 }}
+          />
+          
+          <Stack direction="row" spacing={2} justifyContent="flex-end">
+            <Button
+              variant="outlined"
+              onClick={() => setUploadDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleCasUpload}
+              disabled={!form.casFile}
+            >
+              Upload & Process
+            </Button>
+          </Stack>
+        </Box>
+      </Dialog>
+
       <Toaster position="top-right" />
     </Box>
   );
