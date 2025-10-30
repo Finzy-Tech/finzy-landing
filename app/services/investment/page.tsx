@@ -397,7 +397,7 @@ export default function InvestmentPage() {
                           fontWeight: 600,
                           backgroundColor: "var(--color-text-primary)",
                           '&:hover': {
-                            backgroundColor: '#1b5e20',
+                            backgroundColor: "#105A4A",
                           }
                         }}
                         onClick={() =>
