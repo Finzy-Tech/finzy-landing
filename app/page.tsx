@@ -2,8 +2,8 @@ import { Box } from "@mui/material";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import About from "./components/About";
-import Services from "./components/Services";
 import Contact from "./components/Contact";
+import Services from "./components/Services/Services";
 
 export default function Home() {
   return (

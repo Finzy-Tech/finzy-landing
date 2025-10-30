@@ -64,4 +64,9 @@ const SERVICES = [
   },
 ];
 
-export { WEBSITE_TEXT, NAVBAR_LINKS, SERVICE_CARDS, SERVICES };
+const SERVICE_NAVBAR_LINKS = [
+  { label: "Overview", path: "/" },
+  { label: "Explore Funds", path: "/funds" },
+]
+
+export { WEBSITE_TEXT, NAVBAR_LINKS, SERVICE_NAVBAR_LINKS, SERVICE_CARDS, SERVICES };

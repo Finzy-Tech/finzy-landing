@@ -174,7 +174,7 @@ export default function Page({
   ];
 
   const peerFunds = [
-    "Motilal Oswal Midcap Fund",
+    "Motilal Oswal Multicap 35 Fund - Direct Growth",
     "Nippon India Growth Mid Cap Fund",
     "HDFC Mid Cap Fund",
     "Kotak Midcap Fund",
@@ -298,13 +298,13 @@ export default function Page({
             </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
               <Chip
-                label="Equity"
+                label="Fund"
                 variant="outlined"
                 size="small"
                 sx={{ p: 1, color: "grey" }}
               />
               <Chip
-                label="Moderate Risk"
+                label="Very High Risk"
                 variant="outlined"
                 size="small"
                 sx={{ p: 1, color: "grey" }}
@@ -688,7 +688,6 @@ export default function Page({
             >
               <Typography sx={{ mr: 1 }}>Very High</Typography>
               <SpeedIcon sx={{ color: "#e53935", mr: 0.5 }} />
-              <EmojiEmotionsIcon sx={{ color: "#43a047" }} />
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Divider />
@@ -1205,7 +1204,7 @@ export default function Page({
                 <TableBody>
                   {[
                     {
-                      name: "Motilal Oswal Midcap Fund",
+                      name: "Motilal Oswal Multicap 35 Fund - Direct Growth",
                       m6: "18.2%",
                       y1: "32.1%",
                       y3: "22.5%",
@@ -1280,7 +1279,7 @@ export default function Page({
                 <TableBody>
                   {[
                     {
-                      name: "Motilal Oswal Midcap Fund",
+                      name: "Motilal Oswal Multicap 35 Fund - Direct Growth",
                       beta: 0.89,
                       sharpe: 1.18,
                       sortino: 1.43,
@@ -1355,7 +1354,7 @@ export default function Page({
                 <TableBody>
                   {[
                     {
-                      name: "Motilal Oswal Midcap Fund",
+                      name: "Motilal Oswal Multicap 35 Fund - Direct Growth",
                       aum: "34,780",
                       expense: "0.69%",
                       age: "11.7 yrs",
@@ -1454,19 +1453,19 @@ export default function Page({
             About this fund
           </Typography>
           <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
-            About Motilal Oswal Midcap Fund
+            About Motilal Oswal Multicap 35 Fund - Direct Growth
           </Typography>
           <Typography variant="body2" sx={{ mb: 1.5 }}>
-            Motilal Oswal Midcap Fund Direct-Growth is a Mid Cap mutual fund
+            Motilal Oswal Multicap 35 Fund - Direct Growth Direct-Growth is a Mid Cap mutual fund
             scheme from{" "}
             <Link href="#" color="success.main" underline="hover">
               Motilal Oswal Mutual Fund
             </Link>
             . This fund has been in existence for 11 yrs 7 m, having been
-            launched on 03/02/2014. Motilal Oswal Midcap Fund Direct-Growth has
+            launched on 03/02/2014. Motilal Oswal Multicap 35 Fund - Direct Growth Direct-Growth has
             ₹34,780 Crores worth of assets under management (AUM) as on
             31/08/2025 and is medium-sized fund of its category. The latest Net
-            Asset Value (NAV) of Motilal Oswal Midcap Fund Direct-Growth as of
+            Asset Value (NAV) of Motilal Oswal Multicap 35 Fund - Direct Growth Direct-Growth as of
             15/09/2025 is ₹120.26. The fund has an expense ratio of 0.69%, which
             is close to what most other{" "}
             <Link href="#" color="success.main" underline="hover">

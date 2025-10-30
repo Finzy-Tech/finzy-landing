@@ -1,7 +1,7 @@
+import { SERVICE_CARDS } from "@/app/constants/constants";
 import { Box, Button, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
-import { SERVICE_CARDS } from "../constants/constants";
 
 type Props = {};
 
