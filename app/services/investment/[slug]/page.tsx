@@ -279,8 +279,8 @@ export default function Page({
   ];
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Box sx={{ p: 4, display: "flex", flexDirection: "column", gap: 3, paddingTop: 15 }}>
+    <Box sx={{ width: "100%", backgroundColor: "var(--color-background-primary)" }}>
+      <Box sx={{ p: 4, display: "flex", flexDirection: "column", gap: 3 }}>
       <Paper
         sx={{
           display: "flex",
@@ -288,6 +288,7 @@ export default function Page({
           px: 8,
           justifyContent: "space-between",
           alignItems: "center",
+          boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)"
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
@@ -316,7 +317,7 @@ export default function Page({
           <Button
             style={{
               marginTop: "8px",
-              backgroundColor: "var(--color-text-primary)",
+              background: "linear-gradient(145deg, #0C4139, #10594E)",
               color: "var(--color-background)",
               padding: "10px 20px",
               width: "15rem",
@@ -328,7 +329,7 @@ export default function Page({
         </Box>
       </Paper>
         {/* Top summary */}
-        <Paper sx={{ p: 2, display: "flex", justifyContent: "space-around" }}>
+        <Paper sx={{ p: 2, display: "flex", justifyContent: "space-around", boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
           <Box sx={{ p: 2 }}>
             <Typography variant="body2" color="text.secondary">
               NAV as of{" "}
@@ -437,7 +438,7 @@ export default function Page({
         </Paper>
 
         {/* Historical NAV & returns */}
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 3, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
             Historical NAV & returns
           </Typography>
@@ -551,7 +552,7 @@ export default function Page({
         </Paper>
 
         {/* Fund Details */}
-        <Paper sx={{ p: 3, borderRadius: 2, mx: "auto" }}>
+        <Paper sx={{ p: 3, borderRadius: 2, mx: "auto", boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
             Fund overview
           </Typography>
@@ -720,7 +721,7 @@ export default function Page({
         </Paper>
 
         {/* SIP Calculator */}
-        <Paper sx={{ p: 3, borderRadius: 2 }}>
+        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
             Fund Returns calculator
           </Typography>
@@ -940,7 +941,7 @@ export default function Page({
         </Paper>
 
         {/* Trailing Returns */}
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 3, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
             Trailing returns{" "}
             <span style={{ fontWeight: 400, color: "#888", fontSize: 14 }}>
@@ -977,7 +978,7 @@ export default function Page({
         </Paper>
 
         {/* Asset Allocation */}
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 3, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Asset allocation{" "}
             <span style={{ fontWeight: 400, color: "#888", fontSize: 14 }}>
@@ -1159,7 +1160,7 @@ export default function Page({
         </Paper>
 
         {/* Peer Comparison */}
-        <Paper sx={{ p: 2 }}>
+        <Paper sx={{ p: 2, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
             Peer comparison
           </Typography>
@@ -1411,7 +1412,7 @@ export default function Page({
         </Paper>
 
         {/* Key risk & return ratios */}
-        <Paper sx={{ p: 2 }}>
+        <Paper sx={{ p: 2, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
             Key risk & return ratios{" "}
             <span style={{ color: "#888", fontWeight: 400, fontSize: 14 }}>
@@ -1448,7 +1449,7 @@ export default function Page({
         </Paper>
 
         {/* About this fund */}
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 3, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
             About this fund
           </Typography>

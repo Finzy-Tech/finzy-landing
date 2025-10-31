@@ -30,7 +30,7 @@ const DataCard: React.FC<DataCardProps> = ({
   icon
 }) => {
   return (
-    <Card style={{ display: "flex", flexDirection: "column", padding: 8, border: "1px solid rgba(12, 65, 57, 0.08)", boxShadow: "0 2px 8px rgba(12, 65, 57, 0.06)", borderRadius: "12px" }}>
+    <Card style={{ display: "flex", flexDirection: "column", padding: 8, border: "1px solid rgba(12, 65, 57, 0.08)", boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)", borderRadius: "12px" }}>
       <CardContent>
         {icon}
         <Typography

@@ -209,7 +209,7 @@ export default function InvestmentPage() {
         <Typography
           sx={{
             fontWeight: 600,
-            color: "var(--color-text-primary)",
+            color: "#153E35",
             fontSize: "3rem",
           }}
         >
@@ -224,7 +224,13 @@ export default function InvestmentPage() {
 
       {/* Recommended Funds */}
       {riskProfileExists && (
-        <Card sx={{ mb: 4, boxShadow: '2' }}>
+        <Card
+          sx={{
+            mb: 4,
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
           <CardContent sx={{ p: { xs: 2, md: 3 } }}>
             <Box
               sx={{
@@ -235,31 +241,31 @@ export default function InvestmentPage() {
               }}
             >
               <Box>
-                <Typography 
-                  sx={{ 
+                <Typography
+                  sx={{
                     fontWeight: 700,
-                    color: 'var(--color-text-primary)',
-                    fontSize: '1.4rem',
-                    mb: 1
+                    color: "var(--color-text-primary)",
+                    fontSize: "1.4rem",
+                    mb: 1,
                   }}
                 >
                   Recommended Funds
                 </Typography>
-                <Typography 
-                  variant="body1" 
-                  sx={{ 
-                    color: 'text.secondary',
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "text.secondary",
                   }}
                 >
                   Based on your portfolio and risk profile
                 </Typography>
               </Box>
-              <FormControl 
-                sx={{ 
+              <FormControl
+                sx={{
                   minWidth: 180,
-                  '& .MuiOutlinedInput-root': {
+                  "& .MuiOutlinedInput-root": {
                     borderRadius: 2,
-                  }
+                  },
                 }}
               >
                 <InputLabel size="small">All Categories</InputLabel>
@@ -280,13 +286,13 @@ export default function InvestmentPage() {
             <Grid container spacing={3}>
               {filteredFunds.map((rec, idx) => (
                 <Grid size={{ xs: 12, sm: 6, md: 4 }} key={idx}>
-                  <Paper 
+                  <Paper
                     elevation={0}
-                    sx={{ 
+                    sx={{
                       p: 3,
-                      height: '100%',
-                      border: '1px solid',
-                      borderColor: 'divider',
+                      height: "100%",
+                      border: "1px solid",
+                      borderColor: "divider",
                       borderRadius: 2,
                     }}
                   >
@@ -298,13 +304,13 @@ export default function InvestmentPage() {
                       }}
                     >
                       <Box>
-                        <Typography 
-                          variant="h6" 
-                          sx={{ 
+                        <Typography
+                          variant="h6"
+                          sx={{
                             mb: 2,
                             fontWeight: 600,
-                            fontSize: '1.25rem',
-                            color: 'var(--color-text-primary)'
+                            fontSize: "1.25rem",
+                            color: "var(--color-text-primary)",
                           }}
                         >
                           {rec.name}
@@ -314,61 +320,129 @@ export default function InvestmentPage() {
                             label={rec.category}
                             size="small"
                             sx={{
-                              backgroundColor: "white",
-                              color: rec.category === 'Equity' ? 'primary.main' : rec.category === 'Debt' ? 'success.main' : 'warning.main',
-                              fontWeight: 500,
-                              border: '1px solid',
+                              backgroundColor:
+                                rec.category === "Equity"
+                                  ? "#F0F9F6"
+                                  : rec.category === "Debt"
+                                  ? "#F5F7FA"
+                                  : "#FFF8F0",
+                              color:
+                                rec.category === "Equity"
+                                  ? "#0C4139"
+                                  : rec.category === "Debt"
+                                  ? "#4A5568"
+                                  : "#8B5A00",
+                              fontWeight: 600,
+                              cursor: "pointer",
+                              fontSize: "0.75rem",
+                              letterSpacing: "0.02em",
+                              textTransform: "uppercase",
+                              border: "1px solid",
+                              borderColor:
+                                rec.category === "Equity"
+                                  ? "rgba(12, 65, 57, 0.15)"
+                                  : rec.category === "Debt"
+                                  ? "rgba(74, 85, 104, 0.12)"
+                                  : "rgba(139, 90, 0, 0.15)",
+                              px: 1.5,
+                              py: 0.5,
+                              height: "26px",
+                              transition: "all 0.2s ease",
+                              "&:hover": {
+                                backgroundColor:
+                                  rec.category === "Equity"
+                                    ? "#E5F5F0"
+                                    : rec.category === "Debt"
+                                    ? "#EDF1F7"
+                                    : "#FFF3E5",
+                                transform: "translateY(-1px)",
+                                boxShadow: "0 2px 4px rgba(0,0,0,0.04)",
+                              },
                             }}
                           />
+
                           <Chip
-                            label={`Risk: ${rec.risk}`}
+                            label={`${rec.risk} Risk`}
                             size="small"
                             sx={{
-                              backgroundColor: "white",
-                              color: rec.risk === 'Low' ? 'success.main' : rec.risk === 'High' ? 'error.main' : 'warning.main',
+                              backgroundColor: "rgba(0, 0, 0, 0.02)",
+                              color: "#6B7280",
+                              cursor: "pointer",
                               fontWeight: 500,
-                              border: "1px solid",
+                              fontSize: "0.7rem",
+                              border: "1px solid rgba(0, 0, 0, 0.06)",
+                              px: 1.25,
+                              height: "24px",
+                              "& .MuiChip-label": {
+                                px: 0.75,
+                              },
+                              "&::before": {
+                                content: '""',
+                                width: 5,
+                                height: 5,
+                                borderRadius: "50%",
+                                backgroundColor:
+                                  rec.risk === "Low"
+                                    ? "#10B981"
+                                    : rec.risk === "High"
+                                    ? "#EF4444"
+                                    : "#F59E0B",
+                                display: "inline-block",
+                                mr: 0.75,
+                              },
                             }}
                           />
                         </Stack>
                         <Box sx={{ mb: 2 }}>
-                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            gutterBottom
+                          >
                             5Y Return
                           </Typography>
                           <Typography
                             variant="h6"
-                            sx={{ 
+                            sx={{
                               fontWeight: 600,
-                              color: 'success.main',
-                              fontSize: '1.1rem'
+                              color: "success.main",
+                              fontSize: "1.1rem",
                             }}
                           >
                             {rec.fiveYearReturn}%
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 2 }}>
-                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            gutterBottom
+                          >
                             NAV
                           </Typography>
-                          <Typography 
-                            variant="h6" 
-                            sx={{ 
+                          <Typography
+                            variant="h6"
+                            sx={{
                               fontWeight: 600,
-                              fontSize: '1.1rem'
+                              fontSize: "1.1rem",
                             }}
                           >
                             ₹{rec.nav}
                           </Typography>
                         </Box>
                         <Box sx={{ mb: 3 }}>
-                          <Typography variant="body2" color="text.secondary" gutterBottom>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            gutterBottom
+                          >
                             Min. Investment
                           </Typography>
-                          <Typography 
-                            variant="h6" 
-                            sx={{ 
+                          <Typography
+                            variant="h6"
+                            sx={{
                               fontWeight: 600,
-                              fontSize: '1.1rem'
+                              fontSize: "1.1rem",
                             }}
                           >
                             ₹{rec.minInvestment}
@@ -376,9 +450,9 @@ export default function InvestmentPage() {
                         </Box>
                         <Typography
                           variant="body2"
-                          sx={{ 
-                            color: 'text.secondary',
-                            lineHeight: 1.6
+                          sx={{
+                            color: "text.secondary",
+                            lineHeight: 1.6,
                           }}
                         >
                           {rec.description}
@@ -392,13 +466,13 @@ export default function InvestmentPage() {
                           pt: 1.5,
                           pb: 1.5,
                           mt: 2,
-                          textTransform: 'none',
-                          fontSize: '1rem',
+                          textTransform: "none",
+                          fontSize: "1rem",
                           fontWeight: 600,
                           backgroundColor: "var(--color-text-primary)",
-                          '&:hover': {
+                          "&:hover": {
                             backgroundColor: "#105A4A",
-                          }
+                          },
                         }}
                         onClick={() =>
                           router.push(`/services/investment/${rec.id}`)
@@ -480,11 +554,21 @@ export default function InvestmentPage() {
       ) : (
         <Stack spacing={4}>
           {/* Portfolio Overview */}
-          <Card sx={{ boxShadow: 2 }}>
+          <Card
+            sx={{
+              boxShadow:
+                "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+            }}
+          >
             <CardContent sx={{ p: 3 }}>
               <Typography
                 gutterBottom
-                sx={{ fontWeight: 600, mb: 3, fontSize: "1.4rem", color: "var(--color-text-primary)" }}
+                sx={{
+                  fontWeight: 600,
+                  mb: 3,
+                  fontSize: "1.4rem",
+                  color: "var(--color-text-primary)",
+                }}
               >
                 Portfolio Overview
               </Typography>
@@ -573,10 +657,21 @@ export default function InvestmentPage() {
           </Card>
 
           {/* Holdings Table */}
-          <Card sx={{ boxShadow: 2 }}>
+          <Card
+            sx={{
+              boxShadow:
+                "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+            }}
+          >
             <CardContent sx={{ p: 0 }}>
               <Box sx={{ py: 3, pl: 2 }}>
-                <Typography sx={{ fontWeight: 600, fontSize: "1.4rem", color: "var(--color-text-primary)" }}>
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: "1.4rem",
+                    color: "var(--color-text-primary)",
+                  }}
+                >
                   Your Holdings
                 </Typography>
               </Box>
