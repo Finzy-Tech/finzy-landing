@@ -139,24 +139,18 @@ export default function Page({
 
   // Dummy data for 5Y (monthly points)
   const navData = [
-    { date: "May '21", fund: 40, avg: 40 },
-    { date: "Aug '21", fund: 44, avg: 43 },
-    { date: "Nov '21", fund: 48, avg: 46 },
-    { date: "Feb '22", fund: 51, avg: 48 },
-    { date: "May '22", fund: 53, avg: 50 },
-    { date: "Aug '22", fund: 54, avg: 51 },
-    { date: "Nov '22", fund: 56, avg: 52 },
-    { date: "Feb '23", fund: 60, avg: 54 },
-    { date: "May '23", fund: 68, avg: 58 },
-    { date: "Aug '23", fund: 80, avg: 65 },
-    { date: "Nov '23", fund: 95, avg: 75 },
-    { date: "Feb '24", fund: 110, avg: 85 },
-    { date: "May '24", fund: 105, avg: 82 },
-    { date: "Aug '24", fund: 115, avg: 90 },
-    { date: "Nov '24", fund: 120, avg: 95 },
-    { date: "Feb '25", fund: 112, avg: 92 },
-    { date: "May '25", fund: 118, avg: 97 },
-    { date: "Sep '25", fund: 120.26, avg: 100 },
+    { date: "Jan '25", fund: 40, avg: 40 },
+    { date: "Feb '25", fund: 44, avg: 43 },
+    { date: "Mar '25", fund: 48, avg: 46 },
+    { date: "Apr '25", fund: 51, avg: 48 },
+    { date: "May '25", fund: 53, avg: 50 },
+    { date: "Jun '25", fund: 54, avg: 51 },
+    { date: "Jul '25", fund: 56, avg: 52 },
+    { date: "Aug '25", fund: 60, avg: 54 },
+    { date: "Sep '25", fund: 68, avg: 58 },
+    { date: "Oct '25", fund: 80, avg: 65 },
+    { date: "Nov '25", fund: 95, avg: 75 },
+    { date: "Dec '25", fund: 110, avg: 85 },
   ];
 
   const topHoldings = [
@@ -279,57 +273,68 @@ export default function Page({
   ];
 
   return (
-    <Box sx={{ width: "100%", backgroundColor: "var(--color-background-primary)" }}>
+    <Box
+      sx={{ width: "100%", backgroundColor: "var(--color-background-primary)" }}
+    >
       <Box sx={{ p: 4, display: "flex", flexDirection: "column", gap: 3 }}>
-      <Paper
-        sx={{
-          display: "flex",
-          py: 4,
-          px: 8,
-          justifyContent: "space-between",
-          alignItems: "center",
-          boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)"
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <Image src="/mf.jpg" alt="Fund Image" width={100} height={100} />
-          <Box>
-            <Typography variant="h4" gutterBottom>
-              {selectedMf.name}
-            </Typography>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Chip
-                label="Fund"
-                variant="outlined"
-                size="small"
-                sx={{ p: 1, color: "grey" }}
-              />
-              <Chip
-                label="Very High Risk"
-                variant="outlined"
-                size="small"
-                sx={{ p: 1, color: "grey" }}
-              />
+        <Paper
+          sx={{
+            display: "flex",
+            py: 4,
+            px: 8,
+            justifyContent: "space-between",
+            alignItems: "center",
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 4 }}>
+            <Image src="/mf.jpg" alt="Fund Image" width={100} height={100} />
+            <Box>
+              <Typography variant="h4" gutterBottom>
+                {selectedMf.name}
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                <Chip
+                  label="Fund"
+                  variant="outlined"
+                  size="small"
+                  sx={{ p: 1, color: "grey" }}
+                />
+                <Chip
+                  label="Very High Risk"
+                  variant="outlined"
+                  size="small"
+                  sx={{ p: 1, color: "grey" }}
+                />
+              </Box>
             </Box>
           </Box>
-        </Box>
-        <Box>
-          <Button
-            style={{
-              marginTop: "8px",
-              background: "linear-gradient(145deg, #0C4139, #10594E)",
-              color: "var(--color-background)",
-              padding: "10px 20px",
-              width: "15rem",
-              borderRadius: "4rem",
-            }}
-          >
-            Invested
-          </Button>
-        </Box>
-      </Paper>
+          <Box>
+            <Button
+              style={{
+                marginTop: "8px",
+                background: "linear-gradient(145deg, #0C4139, #10594E)",
+                color: "var(--color-background)",
+                padding: "10px 20px",
+                width: "15rem",
+                borderRadius: "4rem",
+              }}
+            >
+              Invested
+            </Button>
+          </Box>
+        </Paper>
         {/* Top summary */}
-        <Paper sx={{ p: 2, display: "flex", justifyContent: "space-around", boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
+        <Paper
+          sx={{
+            p: 2,
+            display: "flex",
+            justifyContent: "space-around",
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
           <Box sx={{ p: 2 }}>
             <Typography variant="body2" color="text.secondary">
               NAV as of{" "}
@@ -438,7 +443,13 @@ export default function Page({
         </Paper>
 
         {/* Historical NAV & returns */}
-        <Paper sx={{ p: 3, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
+        <Paper
+          sx={{
+            p: 3,
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
           <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
             Historical NAV & returns
           </Typography>
@@ -447,14 +458,13 @@ export default function Page({
           </Typography>
           {/* Chart Tabs */}
           <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-            {["1M", "3M", "6M", "1Y", "3Y", "5Y", "Max"].map((label, idx) => (
+            {["1M", "3M", "6M", "1Y", "Max"].map((label, idx) => (
               <Chip
                 key={label}
                 label={label}
-                color={label === "5Y" ? "primary" : "default"}
-                variant={label === "5Y" ? "filled" : "outlined"}
+                variant={label === "1Y" ? "filled" : "outlined"}
                 size="small"
-                sx={{ fontWeight: 600 }}
+                sx={{ fontWeight: 600, color: "text.primary" }}
               />
             ))}
           </Box>
@@ -469,7 +479,6 @@ export default function Page({
               alignItems: "center",
               justifyContent: "center",
               mb: 2,
-              position: "relative",
             }}
           >
             {/* Replace this with a real chart */}
@@ -491,7 +500,7 @@ export default function Page({
                 <Line
                   type="monotone"
                   dataKey="fund"
-                  stroke="#1976d2"
+                  stroke="#2e7d32"
                   strokeWidth={2.5}
                   dot={false}
                   name="This fund"
@@ -512,47 +521,19 @@ export default function Page({
                 />
               </LineChart>
             </ResponsiveContainer>
-            {/* Legend */}
-            <Box
-              sx={{
-                position: "absolute",
-                bottom: 16,
-                right: 24,
-                display: "flex",
-                gap: 2,
-                alignItems: "center",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 4,
-                    bgcolor: "#1976d2",
-                    borderRadius: 1,
-                    mr: 0.5,
-                  }}
-                />
-                <Typography variant="caption">This fund</Typography>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-                <Box
-                  sx={{
-                    width: 12,
-                    height: 4,
-                    bgcolor: "#ffb300",
-                    borderRadius: 1,
-                    mr: 0.5,
-                  }}
-                />
-                <Typography variant="caption">Category average</Typography>
-              </Box>
-            </Box>
           </Box>
         </Paper>
 
         {/* Fund Details */}
-        <Paper sx={{ p: 3, borderRadius: 2, mx: "auto", boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
+        <Paper
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            mx: "auto",
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
             Fund overview
           </Typography>
@@ -721,7 +702,14 @@ export default function Page({
         </Paper>
 
         {/* SIP Calculator */}
-        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
+        <Paper
+          sx={{
+            p: 3,
+            borderRadius: 2,
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
             Fund Returns calculator
           </Typography>
@@ -734,14 +722,20 @@ export default function Page({
               <Tabs
                 value={tab}
                 onChange={(_, v) => setTab(v)}
-                sx={{ minHeight: 32, mb: 2 }}
+                sx={{
+                  minHeight: 32,
+                  mb: 2,
+                  "& .MuiTabs-indicator": {
+                    backgroundColor: "#2E7D32 !important",
+                  },
+                }}
               >
                 <Tab
                   label="Monthly SIP"
                   sx={{
                     minHeight: 32,
                     fontWeight: tab === 0 ? 600 : 400,
-                    color: tab === 0 ? "primary.main" : "text.primary",
+                    color: tab === 0 ? "#2E7D32 !important" : "text.primary",
                   }}
                 />
                 <Tab
@@ -749,7 +743,7 @@ export default function Page({
                   sx={{
                     minHeight: 32,
                     fontWeight: tab === 1 ? 600 : 400,
-                    color: tab === 1 ? "primary.main" : "text.primary",
+                    color: tab === 1 ? "#2E7D32 !important" : "text.primary",
                   }}
                 />
               </Tabs>
@@ -784,7 +778,12 @@ export default function Page({
                   variant="outlined"
                   size="small"
                   onClick={() => setYears((y) => Math.max(1, y - 1))}
-                  sx={{ minWidth: 36, fontWeight: 700 }}
+                  sx={{
+                    minWidth: 36,
+                    fontWeight: 700,
+                    color: "#2E7D32",
+                    borderColor: "#2E7D32",
+                  }}
                 >
                   –
                 </Button>
@@ -793,7 +792,12 @@ export default function Page({
                   variant="outlined"
                   size="small"
                   onClick={() => setYears((y) => Math.min(30, y + 1))}
-                  sx={{ minWidth: 36, fontWeight: 700 }}
+                  sx={{
+                    minWidth: 36,
+                    fontWeight: 700,
+                    color: "#2E7D32",
+                    borderColor: "#2E7D32",
+                  }}
                 >
                   +
                 </Button>
@@ -941,7 +945,13 @@ export default function Page({
         </Paper>
 
         {/* Trailing Returns */}
-        <Paper sx={{ p: 3, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
+        <Paper
+          sx={{
+            p: 3,
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
             Trailing returns{" "}
             <span style={{ fontWeight: 400, color: "#888", fontSize: 14 }}>
@@ -978,7 +988,13 @@ export default function Page({
         </Paper>
 
         {/* Asset Allocation */}
-        <Paper sx={{ p: 3, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
+        <Paper
+          sx={{
+            p: 3,
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             Asset allocation{" "}
             <span style={{ fontWeight: 400, color: "#888", fontSize: 14 }}>
@@ -1160,23 +1176,36 @@ export default function Page({
         </Paper>
 
         {/* Peer Comparison */}
-        <Paper sx={{ p: 2, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
+        <Paper
+          sx={{
+            p: 2,
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
           <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
             Peer comparison
           </Typography>
           <Tabs
             value={tabPeer}
             onChange={(_, v) => setTabPeer(v)}
-            sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}
+            sx={{
+              borderBottom: 1,
+              borderColor: "divider",
+              mb: 2,
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#2E7D32 !important",
+              }
+            }}
           >
-            <Tab label="Returns" />
-            <Tab label="Risk ratios" />
-            <Tab label="Other Details" />
+            <Tab sx={{color: tabPeer === 0 ? "#2E7D32 !important" : "text.primary", }} label="Returns" />
+            <Tab sx={{color: tabPeer === 1 ? "#2E7D32 !important" : "text.primary", }} label="Risk ratios" />
+            <Tab sx={{color: tabPeer === 2 ? "#2E7D32 !important" : "text.primary", }} label="Other Details" />
           </Tabs>
           {/* Returns Tab */}
           {tabPeer === 0 && (
             <Box>
-              <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+              <Box sx={{ display: "flex", gap: 2, mb: 2, ml: 1.5 }}>
                 {["6M", "1Y", "3Y", "5Y", "10Y"].map((label) => (
                   <Chip
                     key={label}
@@ -1412,162 +1441,434 @@ export default function Page({
         </Paper>
 
         {/* Key risk & return ratios */}
-        <Paper sx={{ p: 2, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 1 }}>
+        <Paper
+          sx={{
+            p: 3,
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+            borderRadius: 2,
+          }}
+        >
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              fontWeight: 600, 
+              mb: 2
+            }}
+          >
             Key risk & return ratios{" "}
-            <span style={{ color: "#888", fontWeight: 400, fontSize: 14 }}>
+            <Typography 
+              component="span" 
+              sx={{ 
+                color: "#888", 
+                fontWeight: 400, 
+                fontSize: 14,
+                ml: 1,
+                display: 'inline-block'
+              }}
+            >
               Compared to other funds in the category
-            </span>
+            </Typography>
           </Typography>
           {riskRatios.map((r) => (
-            <Box key={r.label}>
+            <Box key={r.label} sx={{ mb: 2 }}>
               <Box
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
+                  alignItems: "center",
                   mb: 0.5,
                 }}
               >
-                <Typography>{r.label}</Typography>
-                <Typography sx={{ fontWeight: 600 }}>{r.value}</Typography>
+                <Typography>
+                  {r.label}
+                </Typography>
+                <Typography 
+                  sx={{ 
+                    fontWeight: 600
+                  }}
+                >
+                  {r.value}
+                </Typography>
               </Box>
               <Typography
                 variant="caption"
-                sx={{ color: r.color, mb: 1, display: "block" }}
+                sx={{ 
+                  color: r.color, 
+                  mb: 1, 
+                  display: "block",
+                  fontSize: 14,
+                  opacity: 0.9
+                }}
               >
                 {r.desc}
               </Typography>
-              <Divider />
+              <Divider sx={{ opacity: 0.7 }} />
             </Box>
           ))}
           <Typography
             variant="body2"
-            sx={{ color: "primary.main", mt: 2, cursor: "pointer" }}
+            sx={{ 
+              color: "primary.main", 
+              mt: 2, 
+              cursor: "pointer",
+              fontWeight: 500,
+              '&:hover': {
+                opacity: 0.85,
+                textDecoration: 'underline'
+              }
+            }}
           >
             What do these terms mean?
           </Typography>
         </Paper>
 
         {/* About this fund */}
-        <Paper sx={{ p: 3, boxShadow: "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)" }}>
-          <Typography variant="h6" sx={{ fontWeight: 600, mb: 2 }}>
+        <Paper
+          sx={{
+            p: 2.5,
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              fontWeight: 600, 
+              mb: 2,
+              fontSize: 20,
+              letterSpacing: '-0.5px'
+            }}
+          >
             About this fund
           </Typography>
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              fontWeight: 600, 
+              mb: 2,
+              fontSize: 16,
+              color: 'text.primary'
+            }}
+          >
             About Motilal Oswal Multicap 35 Fund - Direct Growth
           </Typography>
-          <Typography variant="body2" sx={{ mb: 1.5 }}>
-            Motilal Oswal Multicap 35 Fund - Direct Growth Direct-Growth is a Mid Cap mutual fund
-            scheme from{" "}
-            <Link href="#" color="success.main" underline="hover">
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              mb: 3,
+              fontSize: 15,
+              lineHeight: 1.6,
+              color: 'text.secondary'
+            }}
+          >
+            Motilal Oswal Multicap 35 Fund - Direct Growth Direct-Growth is a
+            Mid Cap mutual fund scheme from{" "}
+            <Link 
+              href="#" 
+              color="success.main" 
+              underline="hover"
+              sx={{ fontWeight: 500 }}
+            >
               Motilal Oswal Mutual Fund
             </Link>
             . This fund has been in existence for 11 yrs 7 m, having been
-            launched on 03/02/2014. Motilal Oswal Multicap 35 Fund - Direct Growth Direct-Growth has
-            ₹34,780 Crores worth of assets under management (AUM) as on
-            31/08/2025 and is medium-sized fund of its category. The latest Net
-            Asset Value (NAV) of Motilal Oswal Multicap 35 Fund - Direct Growth Direct-Growth as of
-            15/09/2025 is ₹120.26. The fund has an expense ratio of 0.69%, which
-            is close to what most other{" "}
-            <Link href="#" color="success.main" underline="hover">
+            launched on 03/02/2014. Motilal Oswal Multicap 35 Fund - Direct
+            Growth Direct-Growth has ₹34,780 Crores worth of assets under
+            management (AUM) as on 31/08/2025 and is medium-sized fund of its
+            category. The latest Net Asset Value (NAV) of Motilal Oswal Multicap
+            35 Fund - Direct Growth Direct-Growth as of 15/09/2025 is ₹120.26.
+            The fund has an expense ratio of 0.69%, which is close to what most
+            other{" "}
+            <Link 
+              href="#" 
+              color="success.main" 
+              underline="hover"
+              sx={{ fontWeight: 500 }}
+            >
               Mid Cap funds
             </Link>{" "}
             charge.{" "}
-            <Link href="#" color="success.main" underline="hover">
+            <Link 
+              href="#" 
+              color="success.main" 
+              underline="hover"
+              sx={{ fontWeight: 500 }}
+            >
               ...read more
             </Link>
           </Typography>
           <Grid container spacing={2} sx={{ mb: 2 }}>
             <Grid size={{ xs: 12 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'text.secondary',
+                  mb: 0.25,
+                  fontSize: 13,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
                 Fund AUM
               </Typography>
-              <Typography variant="body2" sx={{ mb: 1 }}>
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  mb: 1.5,
+                  fontSize: 15,
+                  fontWeight: 500
+                }}
+              >
                 34,780 Cr as on Aug 31, 2025
               </Typography>
             </Grid>
             <Grid size={{ xs: 12 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'text.secondary',
+                  mb: 0.5,
+                  fontSize: 13,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
                 Scheme document
               </Typography>
-              <Link href="#" color="success.main" underline="hover">
+              <Link 
+                href="#" 
+                color="success.main" 
+                underline="hover"
+                sx={{ 
+                  fontSize: 15,
+                  fontWeight: 500,
+                  display: 'inline-block'
+                }}
+              >
                 View Scheme Document
               </Link>
             </Grid>
             <Grid size={{ xs: 12 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'text.secondary',
+                  mb: 0.5,
+                  fontSize: 13,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
                 Product Presentation
               </Typography>
-              <Link href="#" color="success.main" underline="hover">
+              <Link 
+                href="#" 
+                color="success.main" 
+                underline="hover"
+                sx={{ 
+                  fontSize: 15,
+                  fontWeight: 500,
+                  display: 'inline-block'
+                }}
+              >
                 View Product Presentation
               </Link>
             </Grid>
           </Grid>
-          <Divider sx={{ my: 2 }} />
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+          <Divider sx={{ my: 2, opacity: 0.6 }} />
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              fontWeight: 600, 
+              mb: 1.5,
+              fontSize: 16,
+              color: 'text.primary'
+            }}
+          >
             Fund managers
           </Typography>
-          <List dense>
+          <List 
+            dense 
+            sx={{
+              '& .MuiListItem-root': {
+                px: 0,
+                py: 0.25
+              }
+            }}
+          >
             {fundManagers.map((fm) => (
               <ListItem
                 key={fm.name}
                 secondaryAction={
-                  <IconButton edge="end" size="small">
+                  <IconButton 
+                    edge="end" 
+                    size="small"
+                    sx={{
+                      color: 'success.main',
+                      '&:hover': {
+                        backgroundColor: 'success.lighter'
+                      }
+                    }}
+                  >
                     <AddIcon fontSize="small" />
                   </IconButton>
                 }
                 disablePadding
               >
-                <ListItemText primary={fm.name} />
+                <ListItemText 
+                  primary={fm.name}
+                  primaryTypographyProps={{
+                    fontSize: 15,
+                    fontWeight: 500
+                  }}
+                />
               </ListItem>
             ))}
           </List>
-          <Divider sx={{ my: 2 }} />
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+          <Divider sx={{ my: 1, opacity: 0.6 }} />
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              fontWeight: 600, 
+              mb: 1.5,
+              fontSize: 16,
+              color: 'text.primary'
+            }}
+          >
             Investment objective
           </Typography>
-          <Typography variant="body2" sx={{ mb: 2 }}>
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              mb: 2,
+              fontSize: 15,
+              lineHeight: 1.5,
+              color: 'text.secondary'
+            }}
+          >
             The scheme seeks to achieve long term capital appreciation by
             investing in quality mid-cap companies having long-term competitive
             advantages and potential for growth.
           </Typography>
-          <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1 }}>
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              fontWeight: 600, 
+              mb: 2,
+              fontSize: 16,
+              color: 'text.primary'
+            }}
+          >
             Motilal Oswal Mutual Fund details
           </Typography>
           <Grid container spacing={2}>
             <Grid size={{ xs: 12 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'text.secondary',
+                  mb: 0.25,
+                  fontSize: 13,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
                 No. of schemes
               </Typography>
-              <Typography variant="body2">
-                47{" "}
-                <Link href="#" color="success.main" underline="hover">
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontSize: 15,
+                  mb: 1.5,
+                  fontWeight: 500,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1
+                }}
+              >
+                47
+                <Link 
+                  href="#" 
+                  color="success.main" 
+                  underline="hover"
+                  sx={{ 
+                    fontSize: 15,
+                    fontWeight: 500
+                  }}
+                >
                   view all schemes
                 </Link>
               </Typography>
             </Grid>
             <Grid size={{ xs: 12 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'text.secondary',
+                  mb: 0.5,
+                  fontSize: 13,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
                 Total AUM
               </Typography>
-              <Typography variant="body2">
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontSize: 15,
+                  fontWeight: 500
+                }}
+              >
                 1,09,736 Cr as on Jun 30, 2025
               </Typography>
             </Grid>
             <Grid size={{ xs: 12 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'text.secondary',
+                  mb: 0.5,
+                  fontSize: 13,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
                 Address
               </Typography>
-              <Typography variant="body2">
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontSize: 15,
+                  lineHeight: 1.6,
+                  color: 'text.primary'
+                }}
+              >
                 Motilal Oswal Towers - 10th Floor, Rahimtullah Sayani Road,
                 Opposite Parel ST Depot, Prabhadevi, Mumbai, 400025
               </Typography>
             </Grid>
             <Grid size={{ xs: 12 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography 
+                variant="body2" 
+                sx={{ 
+                  color: 'text.secondary',
+                  mb: 0.5,
+                  fontSize: 13,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
                 Phone
               </Typography>
-              <Typography variant="body2">
+              <Typography 
+                variant="body1" 
+                sx={{ 
+                  fontSize: 15,
+                  fontWeight: 500
+                }}
+              >
                 022-39804238 / 1800-200-6626
               </Typography>
             </Grid>
