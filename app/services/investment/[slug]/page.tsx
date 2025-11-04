@@ -99,40 +99,40 @@ export default function Page({
 
   // Trailing returns data
   const trailingReturns = [
-    { period: "1 Month", fund: finzyMfData?.return_1mo_pct + "%", avg: "1.5%" },
+    { period: "1 Month", fund: finzyMfData?.financials.return_1mo_pct + "%", avg: "1.5%" },
     {
       period: "3 Months",
-      fund: finzyMfData?.return_3mo_pct + "%",
+      fund: finzyMfData?.financials.return_3mo_pct + "%",
       avg: "2.05%",
     },
     {
       period: "6 Months",
-      fund: finzyMfData?.return_6mo_pct + "%",
+      fund: finzyMfData?.financials.return_6mo_pct + "%",
       avg: "20.13%",
     },
     {
       period: "1 Year",
-      fund: finzyMfData?.return_1yr_pct + "%",
+      fund: finzyMfData?.financials.return_1yr_pct + "%",
       avg: "-1.01%",
     },
     {
       period: "2 Years",
-      fund: finzyMfData?.return_2yr_pct + "%",
+      fund: finzyMfData?.financials.return_2yr_pct + "%",
       avg: "22.15%",
     },
     {
       period: "3 Years",
-      fund: finzyMfData?.return_3yr_pct + "%",
+      fund: finzyMfData?.financials.return_3yr_pct + "%",
       avg: "22.08%",
     },
     {
       period: "5 Years",
-      fund: finzyMfData?.return_5yr_pct + "%",
+      fund: finzyMfData?.financials.return_5yr_pct + "%",
       avg: "26.53%",
     },
     {
       period: "10 Years",
-      fund: finzyMfData?.return_10yr_pct + "%",
+      fund: finzyMfData?.financials.return_10yr_pct + "%",
       avg: "17.69%",
     },
   ];
@@ -257,17 +257,17 @@ export default function Page({
   const assetAllocation = [
     {
       name: "Large Cap",
-      value: parseFloat(finzyMfData?.large_cap_pct),
+      value: parseFloat(finzyMfData?.portfolio.large_cap_pct),
       color: "#6fdbe8",
     },
     {
       name: "Mid Cap",
-      value: parseFloat(finzyMfData?.mid_cap_pct),
+      value: parseFloat(finzyMfData?.portfolio.mid_cap_pct),
       color: "#ff9c92",
     },
     {
       name: "Small Cap",
-      value: parseFloat(finzyMfData?.small_cap_pct),
+      value: parseFloat(finzyMfData?.portfolio.small_cap_pct),
       color: "#ffd580",
     },
   ];
@@ -421,7 +421,7 @@ export default function Page({
               AUM (Fund size)
             </Typography>
             <Typography variant="h6" sx={{ fontWeight: 600 }}>
-              {finzyMfData.aum_cr} Cr
+              {finzyMfData?.financials.aum_cr} Cr
             </Typography>
           </Box>
           <Box sx={{ p: 2 }}>
@@ -544,7 +544,7 @@ export default function Page({
             </Grid>
             <Grid size={{ xs: 6 }}>
               <Typography>
-                {finzyMfData.expense_ratio_pct}%
+                {finzyMfData?.financials.expense_ratio_pct}%
                 <Typography
                   component="span"
                   variant="body2"
@@ -578,7 +578,7 @@ export default function Page({
             </Grid>
             <Grid size={{ xs: 6 }}>
               <Typography>
-                {finzyMfData.exit_load_remarks || "Nil"}
+                {finzyMfData?.details.exit_load_remarks || "Nil"}
                 <Tooltip title="Fee charged if you redeem before a certain period">
                   <InfoOutlinedIcon
                     fontSize="small"
@@ -596,7 +596,7 @@ export default function Page({
               <Typography>AUM (Fund size)</Typography>
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <Typography>₹{finzyMfData.aum_cr} Cr</Typography>
+              <Typography>₹{finzyMfData?.financials.aum_cr} Cr</Typography>
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Divider />
@@ -619,7 +619,7 @@ export default function Page({
             </Grid>
             <Grid size={{ xs: 6 }}>
               <Typography>
-                {calculateAge(finzyMfData.inception_date)}
+                {calculateAge(finzyMfData?.details.inception_date)}
                 <Typography
                   component="span"
                   variant="body2"
@@ -627,7 +627,7 @@ export default function Page({
                   sx={{ ml: 1 }}
                 >
                   since{" "}
-                  {new Date(finzyMfData.inception_date).toLocaleDateString(
+                  {new Date(finzyMfData?.details.inception_date).toLocaleDateString(
                     "en-GB",
                     { year: "numeric", month: "long", day: "numeric" }
                   )}
@@ -643,7 +643,7 @@ export default function Page({
               <Typography>Benchmark</Typography>
             </Grid>
             <Grid size={{ xs: 6 }}>
-              <Typography>{finzyMfData.benchmark_index}</Typography>
+              <Typography>{finzyMfData?.details.benchmark_index}</Typography>
             </Grid>
             <Grid size={{ xs: 12 }}>
               <Divider />
