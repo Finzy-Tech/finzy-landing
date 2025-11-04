@@ -1,6 +1,8 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { SERVICES } from "../constants/constants";
 import Link from "next/link";
+import Navbar from "../components/Navbar"
+import Footer from "../components/Footer"
 
 const ServiceStack = ({
   title,
@@ -78,11 +80,15 @@ const ServiceStack = ({
 
 export default function Services() {
   return (
+    <Box sx={{display: "flex", flexDirection: "column"}}>
+    <Navbar />
+
     <Box
       sx={{
-        backgroundColor: "var(--color-background)",
+        backgroundColor: "var(--color-background-primary)",
         width: "100%",
-        height: "100vh",
+        paddingTop: '10%',
+        paddingBottom: "2rem"
       }}
     >
       <Box
@@ -139,6 +145,9 @@ export default function Services() {
           <hr />
         </Stack>
       </Box>
+    </Box>
+
+    <Footer />
     </Box>
   );
 }

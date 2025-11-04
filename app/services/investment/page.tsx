@@ -7,9 +7,6 @@ import {
   Button,
   Card,
   CardContent,
-  List,
-  ListItem,
-  ListItemText,
   Chip,
   Grid,
   Table,
@@ -42,10 +39,11 @@ import { useRouter } from "next/navigation";
 import axiosPipelineInstance from "@/app/utils/axiosPipeline";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { Toaster, toast } from "react-hot-toast";
-import { Holdings } from "@/types/types";
 import { useMfStore } from "@/app/store/mfStore";
+import UploadIcon from "@mui/icons-material/Upload";
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
+import DataCard from "@/app/components/DataCard";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -69,6 +67,9 @@ const recommendations = [
     fiveYearReturn: 12,
     nav: 120,
     id: 12340,
+    minInvestment: 5000,
+    description:
+      "Motilal Oswal Midcap Fund aims for long-term growth. Suitable for moderate risk investors.",
   },
   {
     name: "Finzy Secure Fund",
@@ -77,6 +78,9 @@ const recommendations = [
     fiveYearReturn: 8,
     nav: 105,
     id: 12341,
+    minInvestment: 1000,
+    description:
+      "Finzy Secure Fund offers stable returns with low risk. Ideal for conservative investors seeking regular income.",
   },
   {
     name: "Finzy Balanced Fund",
@@ -85,6 +89,9 @@ const recommendations = [
     fiveYearReturn: 10,
     nav: 110,
     id: 12342,
+    minInvestment: 3000,
+    description:
+      "Finzy Balanced Fund offers equity and debt exposure. Ideal for balanced risk and return.",
   },
 ];
 
@@ -185,31 +192,87 @@ export default function InvestmentPage() {
   }, [holdings]);
 
   return (
-    <Box sx={{ maxWidth: "100%", px: { xs: 2, md: 4, lg: 6 }, py: { xs: 2, md: 3 } }}>
+    <Box
+      sx={{
+        maxWidth: "100%",
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "var(--color-background-primary)",
+        px: { xs: 2, md: 4, lg: 6 },
+        pt: { xs: 2, md: 3 },
+        pb: { xs: 4, md: 5 },
+      }}
+    >
       {/* Header */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, color: "text.primary" }}>
+      <Box sx={{ mb: 4, mx: "auto", textAlign: "center", maxWidth: 600 }}>
+        <Typography
+          sx={{
+            fontWeight: 600,
+            color: "#153E35",
+            fontSize: "3rem",
+          }}
+        >
           Investment Dashboard
         </Typography>
-        <Typography variant="body1" color="text.secondary">
+        <Typography
+          sx={{ fontSize: "1.4rem", color: "var(--color-text-primary)" }}
+        >
           Manage your portfolio and explore investment opportunities
         </Typography>
       </Box>
 
       {/* Recommended Funds */}
       {riskProfileExists && (
-        <Card sx={{ mb: 4, boxShadow: 2 }}>
-          <CardContent sx={{ p: 3 }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                Recommended Funds
-              </Typography>
-              <FormControl sx={{ minWidth: 150 }}>
-                <InputLabel size="small">Filter by Category</InputLabel>
+        <Card
+          sx={{
+            mb: 4,
+            boxShadow:
+              "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+          }}
+        >
+          <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 4,
+              }}
+            >
+              <Box>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    color: "var(--color-text-primary)",
+                    fontSize: "1.4rem",
+                    mb: 1,
+                  }}
+                >
+                  Recommended Funds
+                </Typography>
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "text.secondary",
+                  }}
+                >
+                  Based on your portfolio and risk profile
+                </Typography>
+              </Box>
+              <FormControl
+                sx={{
+                  minWidth: 180,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 2,
+                  },
+                }}
+              >
+                <InputLabel size="small">All Categories</InputLabel>
                 <Select
                   size="small"
                   value={fundFilter}
-                  label="Filter by Category"
+                  label="All Categories"
                   onChange={(e) => setFundFilter(e.target.value)}
                 >
                   <MenuItem value="All">All Categories</MenuItem>
@@ -219,113 +282,339 @@ export default function InvestmentPage() {
                 </Select>
               </FormControl>
             </Box>
-            
-            <Stack spacing={2}>
+
+            <Grid container spacing={3}>
               {filteredFunds.map((rec, idx) => (
-                <Paper key={idx} variant="outlined" sx={{ p: 2 }}>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Box sx={{ flex: 1 }}>
-                      <Typography variant="h6" sx={{ mb: 1, fontWeight: 500 }}>
-                        {rec.name}
-                      </Typography>
-                      <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
-                        <Chip label={rec.category} size="small" color="primary" variant="outlined" />
-                        <Chip 
-                          label={`Risk: ${rec.risk}`} 
-                          size="small" 
-                          color={rec.risk === "Low" ? "success" : rec.risk === "High" ? "error" : "warning"}
-                          variant="outlined"
-                        />
-                      </Stack>
-                      <Grid container spacing={3} sx={{ mt: 1 }}>
-                        <Grid>
-                          <Typography variant="body2" color="text.secondary">
+                <Grid size={{ xs: 12, sm: 6, md: 4 }} key={idx}>
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 3,
+                      height: "100%",
+                      border: "1px solid",
+                      borderColor: "divider",
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        height: "100%",
+                      }}
+                    >
+                      <Box>
+                        <Typography
+                          variant="h6"
+                          sx={{
+                            mb: 2,
+                            fontWeight: 600,
+                            fontSize: "1.25rem",
+                            color: "var(--color-text-primary)",
+                          }}
+                        >
+                          {rec.name}
+                        </Typography>
+                        <Stack direction="row" spacing={1} sx={{ mb: 2.5 }}>
+                          <Chip
+                            label={rec.category}
+                            size="small"
+                            sx={{
+                              backgroundColor:
+                                rec.category === "Equity"
+                                  ? "#F0F9F6"
+                                  : rec.category === "Debt"
+                                  ? "#F5F7FA"
+                                  : "#FFF8F0",
+                              color:
+                                rec.category === "Equity"
+                                  ? "#0C4139"
+                                  : rec.category === "Debt"
+                                  ? "#4A5568"
+                                  : "#8B5A00",
+                              fontWeight: 600,
+                              cursor: "pointer",
+                              fontSize: "0.75rem",
+                              letterSpacing: "0.02em",
+                              textTransform: "uppercase",
+                              border: "1px solid",
+                              borderColor:
+                                rec.category === "Equity"
+                                  ? "rgba(12, 65, 57, 0.15)"
+                                  : rec.category === "Debt"
+                                  ? "rgba(74, 85, 104, 0.12)"
+                                  : "rgba(139, 90, 0, 0.15)",
+                              px: 1.5,
+                              py: 0.5,
+                              height: "26px",
+                              transition: "all 0.2s ease",
+                              "&:hover": {
+                                backgroundColor:
+                                  rec.category === "Equity"
+                                    ? "#E5F5F0"
+                                    : rec.category === "Debt"
+                                    ? "#EDF1F7"
+                                    : "#FFF3E5",
+                                transform: "translateY(-1px)",
+                                boxShadow: "0 2px 4px rgba(0,0,0,0.04)",
+                              },
+                            }}
+                          />
+
+                          <Chip
+                            label={`${rec.risk} Risk`}
+                            size="small"
+                            sx={{
+                              backgroundColor: "rgba(0, 0, 0, 0.02)",
+                              color: "#6B7280",
+                              cursor: "pointer",
+                              fontWeight: 500,
+                              fontSize: "0.7rem",
+                              border: "1px solid rgba(0, 0, 0, 0.06)",
+                              px: 1.25,
+                              height: "24px",
+                              "& .MuiChip-label": {
+                                px: 0.75,
+                              },
+                              "&::before": {
+                                content: '""',
+                                width: 5,
+                                height: 5,
+                                borderRadius: "50%",
+                                backgroundColor:
+                                  rec.risk === "Low"
+                                    ? "#10B981"
+                                    : rec.risk === "High"
+                                    ? "#EF4444"
+                                    : "#F59E0B",
+                                display: "inline-block",
+                                mr: 0.75,
+                              },
+                            }}
+                          />
+                        </Stack>
+                        <Box sx={{ mb: 2 }}>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            gutterBottom
+                          >
                             5Y Return
                           </Typography>
-                          <Typography variant="body1" sx={{ fontWeight: 500, color: "success.main" }}>
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: 600,
+                              color: "success.main",
+                              fontSize: "1.1rem",
+                            }}
+                          >
                             {rec.fiveYearReturn}%
                           </Typography>
-                        </Grid>
-                        <Grid>
-                          <Typography variant="body2" color="text.secondary">
+                        </Box>
+                        <Box sx={{ mb: 2 }}>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            gutterBottom
+                          >
                             NAV
                           </Typography>
-                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: 600,
+                              fontSize: "1.1rem",
+                            }}
+                          >
                             ₹{rec.nav}
                           </Typography>
-                        </Grid>
-                      </Grid>
+                        </Box>
+                        <Box sx={{ mb: 3 }}>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            gutterBottom
+                          >
+                            Min. Investment
+                          </Typography>
+                          <Typography
+                            variant="h6"
+                            sx={{
+                              fontWeight: 600,
+                              fontSize: "1.1rem",
+                            }}
+                          >
+                            ₹{rec.minInvestment}
+                          </Typography>
+                        </Box>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            color: "text.secondary",
+                            lineHeight: 1.6,
+                          }}
+                        >
+                          {rec.description}
+                        </Typography>
+                      </Box>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        sx={{
+                          pt: 1.5,
+                          pb: 1.5,
+                          mt: 2,
+                          textTransform: "none",
+                          fontSize: "1rem",
+                          fontWeight: 600,
+                          backgroundColor: "var(--color-text-primary)",
+                          "&:hover": {
+                            backgroundColor: "#105A4A",
+                          },
+                        }}
+                        onClick={() =>
+                          router.push(`/services/investment/${rec.id}`)
+                        }
+                      >
+                        Start SIP
+                      </Button>
                     </Box>
-                    <Button
-                      variant="contained"
-                      size="large"
-                      sx={{ ml: 2, minWidth: 120 }}
-                      onClick={() => router.push(`/services/investment/${rec.id}`)}
-                    >
-                      Start SIP
-                    </Button>
-                  </Box>
-                </Paper>
+                  </Paper>
+                </Grid>
               ))}
-            </Stack>
+            </Grid>
           </CardContent>
         </Card>
       )}
 
       {!isPortfolioPresent ? (
-        <Card sx={{ boxShadow: 2, textAlign: "center" }}>
-          <CardContent sx={{ p: 4 }}>
-            <AccountBalanceWalletIcon sx={{ fontSize: 64, color: "text.secondary", mb: 2 }} />
-            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600 }}>
-              Upload Your Portfolio
-            </Typography>
-            <Typography variant="body1" color="text.secondary" sx={{ mb: 4, maxWidth: 500, mx: "auto" }}>
-              Get started by uploading your CAS (Consolidated Account Statement) file to view your current investments and get personalized recommendations.
-            </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<CloudUploadIcon />}
-              onClick={() => setUploadDialog(true)}
-              sx={{ minWidth: 200 }}
-            >
-              Upload CAS File
-            </Button>
-          </CardContent>
-        </Card>
+        <Box sx={{ mx: "auto", display: "flex", maxWidth: 1200, gap: 4 }}>
+          <DataCard
+            title="Upload Portfolio Data"
+            description="Import your mutual fund holdings to track performance, analyze returns, and get a complete view of your investments."
+            features={[
+              "Supports CSV and Excel formats",
+              "Automatic portfolio analysis",
+              "Real-time performance tracking",
+            ]}
+            buttonText="Upload Now"
+            buttonLink="/upload"
+            icon={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "8px",
+                  backgroundColor: "rgba(12, 65, 57, 0.1)",
+                  padding: "16px",
+                  width: "fit-content",
+                }}
+              >
+                <UploadIcon
+                  style={{ color: "var(--color-text-primary)", fontSize: 40 }}
+                />
+              </Box>
+            }
+          />
+          <DataCard
+            title="Complete Risk Assessment"
+            description="Answer a few questions to determine your risk appetite and investment goals for personalized fund recommendations."
+            features={[
+              "Takes only 2-3 minutes",
+              "Science-backed assessment",
+              "Tailored fund suggestions",
+            ]}
+            buttonText="Start Assessment"
+            buttonLink="/assessment"
+            icon={
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: "8px",
+                  backgroundColor: "rgba(12, 65, 57, 0.1)",
+                  padding: "16px",
+                  width: "fit-content",
+                }}
+              >
+                <AssessmentOutlinedIcon
+                  style={{
+                    color: "var(--color-text-primary)",
+                    fontSize: 40,
+                  }}
+                />
+              </Box>
+            }
+          />
+        </Box>
       ) : (
         <Stack spacing={4}>
           {/* Portfolio Overview */}
-          <Card sx={{ boxShadow: 2 }}>
+          <Card
+            sx={{
+              boxShadow:
+                "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+            }}
+          >
             <CardContent sx={{ p: 3 }}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
+              <Typography
+                gutterBottom
+                sx={{
+                  fontWeight: 600,
+                  mb: 3,
+                  fontSize: "1.4rem",
+                  color: "var(--color-text-primary)",
+                }}
+              >
                 Portfolio Overview
               </Typography>
-              
+
               <Grid container spacing={3} sx={{ mb: 3 }}>
-                <Grid size={{ xs: 12, sm: 4 }} >
+                <Grid size={{ xs: 12, sm: 4 }}>
                   <Box sx={{ textAlign: "center", p: 2 }}>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      gutterBottom
+                    >
                       Invested Amount
                     </Typography>
-                    <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
+                    <Typography
+                      variant="h5"
+                      sx={{ fontWeight: 600, color: "text.primary" }}
+                    >
                       ₹{investedAmount.toLocaleString()}
                     </Typography>
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 4 }}>
                   <Box sx={{ textAlign: "center", p: 2 }}>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      gutterBottom
+                    >
                       Current Value
                     </Typography>
-                    <Typography variant="h5" sx={{ fontWeight: 600, color: "text.primary" }}>
+                    <Typography
+                      variant="h5"
+                      sx={{ fontWeight: 600, color: "text.primary" }}
+                    >
                       ₹{currentValue.toLocaleString()}
                     </Typography>
                   </Box>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 4 }}>
                   <Box sx={{ textAlign: "center", p: 2 }}>
-                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      gutterBottom
+                    >
                       Total Returns
                     </Typography>
                     <Chip
@@ -340,7 +629,11 @@ export default function InvestmentPage() {
 
               <Divider sx={{ my: 3 }} />
 
-              <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 600, mb: 2 }}>
+              <Typography
+                variant="subtitle1"
+                gutterBottom
+                sx={{ fontWeight: 600, mb: 2 }}
+              >
                 Portfolio Performance
               </Typography>
               <Box sx={{ height: 250, width: "100%" }}>
@@ -350,12 +643,12 @@ export default function InvestmentPage() {
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip />
-                    <Line 
-                      type="monotone" 
-                      dataKey="value" 
-                      stroke="#1976d2" 
+                    <Line
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#2e7d32"
                       strokeWidth={2}
-                      dot={{ fill: "#1976d2", strokeWidth: 2, r: 4 }}
+                      dot={{ fill: "#2e7d32", strokeWidth: 2, r: 4 }}
                     />
                   </LineChart>
                 </ResponsiveContainer>
@@ -364,10 +657,21 @@ export default function InvestmentPage() {
           </Card>
 
           {/* Holdings Table */}
-          <Card sx={{ boxShadow: 2 }}>
+          <Card
+            sx={{
+              boxShadow:
+                "0 1px 2px rgba(12, 65, 57, 0.04), 0 4px 12px rgba(12, 65, 57, 0.06)",
+            }}
+          >
             <CardContent sx={{ p: 0 }}>
-              <Box sx={{ p: 3, pb: 0 }}>
-                <Typography variant="h6" sx={{ fontWeight: 600 }}>
+              <Box sx={{ py: 3, pl: 2 }}>
+                <Typography
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: "1.4rem",
+                    color: "var(--color-text-primary)",
+                  }}
+                >
                   Your Holdings
                 </Typography>
               </Box>
@@ -376,35 +680,56 @@ export default function InvestmentPage() {
                   <TableHead>
                     <TableRow sx={{ bgcolor: "grey.50" }}>
                       <TableCell sx={{ fontWeight: 600 }}>Fund Name</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>Invested Amount</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>Current Value</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>
+                        Invested Amount
+                      </TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>
+                        Current Value
+                      </TableCell>
                       <TableCell sx={{ fontWeight: 600 }}>Returns</TableCell>
-                      <TableCell sx={{ fontWeight: 600 }}>Current NAV</TableCell>
+                      <TableCell sx={{ fontWeight: 600 }}>
+                        Current NAV
+                      </TableCell>
                       <TableCell sx={{ fontWeight: 600 }}>Units</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {holdings?.mutual_funds.map((h, idx) => (
-                      <TableRow 
+                      <TableRow
                         key={idx}
                         hover
-                        sx={{ cursor: "pointer", "&:hover": { bgcolor: "action.hover" } }}
+                        sx={{
+                          cursor: "pointer",
+                          "&:hover": { bgcolor: "action.hover" },
+                        }}
                         onClick={() => {
                           setSelectedMf(h);
                           router.push(`/services/investment/${h.scheme_id}`);
                         }}
                       >
                         <TableCell>
-                          <Typography variant="body2" sx={{ fontWeight: 500, color: "primary.main" }}>
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              fontWeight: 500,
+                              color: "var(--color-text-primary)",
+                            }}
+                          >
                             {h.name}
                           </Typography>
                         </TableCell>
-                        <TableCell>₹{parseFloat(h.total_cost).toLocaleString()}</TableCell>
-                        <TableCell>₹{parseFloat(h.value).toLocaleString()}</TableCell>
+                        <TableCell>
+                          ₹{parseFloat(h.total_cost).toLocaleString()}
+                        </TableCell>
+                        <TableCell>
+                          ₹{parseFloat(h.value).toLocaleString()}
+                        </TableCell>
                         <TableCell>
                           <Chip
                             label={`${h.return}%`}
-                            color={parseFloat(h.return) >= 0 ? "success" : "error"}
+                            color={
+                              parseFloat(h.return) >= 0 ? "success" : "error"
+                            }
                             size="small"
                             variant="outlined"
                           />
@@ -414,7 +739,9 @@ export default function InvestmentPage() {
                           {parseFloat(h.nav) > 0 &&
                           !isNaN(parseFloat(h.nav)) &&
                           !isNaN(parseFloat(h.total_cost))
-                            ? (parseFloat(h.total_cost) / parseFloat(h.nav)).toFixed(2)
+                            ? (
+                                parseFloat(h.total_cost) / parseFloat(h.nav)
+                              ).toFixed(2)
                             : "N/A"}
                         </TableCell>
                       </TableRow>
@@ -428,8 +755,8 @@ export default function InvestmentPage() {
       )}
 
       {/* Upload Dialog */}
-      <Dialog 
-        open={uploadDialog} 
+      <Dialog
+        open={uploadDialog}
         onClose={() => setUploadDialog(false)}
         maxWidth="sm"
         fullWidth
@@ -438,7 +765,7 @@ export default function InvestmentPage() {
           <Typography variant="h6" gutterBottom sx={{ fontWeight: 600, mb: 3 }}>
             Upload CAS File
           </Typography>
-          
+
           {form.casFile ? (
             <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
               <Chip
@@ -480,7 +807,7 @@ export default function InvestmentPage() {
               />
             </Button>
           )}
-          
+
           <TextField
             label="Password"
             type="password"
@@ -490,12 +817,9 @@ export default function InvestmentPage() {
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             sx={{ mb: 3 }}
           />
-          
+
           <Stack direction="row" spacing={2} justifyContent="flex-end">
-            <Button
-              variant="outlined"
-              onClick={() => setUploadDialog(false)}
-            >
+            <Button variant="outlined" onClick={() => setUploadDialog(false)}>
               Cancel
             </Button>
             <Button
